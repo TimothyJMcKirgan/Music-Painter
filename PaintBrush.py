@@ -4,6 +4,7 @@ import numpy as np
 
 class PaintBrush:
     def __init__(self, parent=None):
+        self.RLData = [1, 1, 1, -1, -1, -1, -1, 1]
         self.Parent = parent
         self.mainapp = parent
         self.rl = self.mainapp.rl
@@ -14,10 +15,16 @@ class PaintBrush:
         # 2. Add in new algorithm function.
         # 3. Add in additional elif in the draw function.
 
-        self.numberAlgorithms = 8
+        self.numberAlgorithms = 9
         self.currentAlgorithm = 1
 
     # Resets the links to the renderlist and frequency data in the main. S
+
+    #def SetAlg9(self):
+        #print("This is algorithm 9")
+        #self.RLData.clear()
+        #self.RLData = [1, 1, 1, -1, -1, -1, -1, 1]
+
     def resetlistlinks(self):
         self.rl = self.mainapp.rl
         self.fl = self.mainapp.freqlist
@@ -65,8 +72,12 @@ class PaintBrush:
         newcol = QColor(col)
         return [3, ULx, ULy, LRx, LRy, fill, newcol]
 
+    def makeTriangle(self, x1, y1, x2, y2, x3, y3, fill, col):
+        newcol = QColor(col)
+        return [4, x1, y1, x2, y2, x3, y3, fill, newcol]
+
     # Render function gateway.
-    def draw(self, data, datapos):
+    def draw(self, data, datapos, spectdata):
         if self.currentAlgorithm == 1:
             self.algorithm1(data)
         elif self.currentAlgorithm == 2:
@@ -83,16 +94,25 @@ class PaintBrush:
             self.algorithm7(data, datapos)
         elif self.currentAlgorithm == 8:
             self.algorithm8(data, datapos)
+        elif self.currentAlgorithm == 9:
+            self.algorithm9(data, spectdata)
 
     # Rendering Algorithms.
 
     def algorithm1(self, data):
-        rx = np.random.random() * 2 - 1
-        ry = np.random.random() * 2 - 1
+        rx1 = np.random.random() * 2 - 1
+        ry1 = np.random.random() * 2 - 1
+        rx2 = np.random.random() * 2 - 1
+        ry2 = np.random.random() * 2 - 1
+        rx3 = np.random.random() * 2 - 1
+        ry3 = np.random.random() * 2 - 1
 
         col = QColor()
         col.setRgbF(np.random.random(), np.random.random(), np.random.random(), 1)
-        self.rl.add(self.makePoint(rx, ry, col))
+        clear = QColor()
+        clear.setRgbF(1, 1, 1, 1)
+        self.rl.add(self.makeRectangle(-1, 1, 1, -1, True, clear))
+        self.rl.add(self.makeTriangle(rx1, ry1, rx2, ry2, rx3, ry3, True, col))
 
     def algorithm2(self, data):
         rtheta = np.random.random() * 2 * np.pi
@@ -184,70 +204,44 @@ class PaintBrush:
 
         self.rl.add(self.makeCircle(x, y-0.5, 0.01, True, col))
 
-        # col.setRgbF(0, 1, 1, 1)
-        # rct = self.makeRectangle(.5, .5, 0, 0, True, col)
-        # self.rl.add(rct)
-        #
-        # col.setRgbF(0, 0, 0, 1)
-        # rct = self.makeRectangle(.5, .5, 0, 0, False, col)
-        # self.rl.add(rct)
-        #
-        # col.setRgbF(1, 0, 1, 1)
-        # line = self.makeLine(-1, -.5, 0, 0.5, col)
-        # self.rl.add(line)
-        #
-        # # col.setRgbF(1,1, 0, 1)
-        # # cricle = self.makeCircle(-.5, -.5, 0.5, False, col)
-        # # self.rl.add(cricle)
-        #
-        # col.setRgbF(1, 0, 0, 1)
-        # cricle = self.makeCircle(-.5, -.5, 0.2, True, col)
-        # self.rl.add(cricle)
-        #
-        # col.setRgbF(1,1, 0, 1)
-        # cricle = self.makeCircle(-.5, -.5, 0.5, False, col)
-        # self.rl.add(cricle)
+    def algorithm9(self, data, spect):
 
-    #####################################################
-    # Code used during testing but shows structure.
-    #####################################################
+        TriCol = QColor()
+        Hue = data[0] * 10
+        TriCol.setHsv(Hue, 255, 130, 255)
 
-    # print(data)
+        print(spect)
 
-    # rx = np.random.random() * 2 - 1
-    # ry = np.random.random() * 2 - 1
-    #
-    # col = QColor()
-    # col.setRgbF(np.random.random(), np.random.random(), np.random.random(), 1)
-    # self.rl.add(self.makePoint(rx, ry, col))
+        LineCol = QColor()
+        LineCol.setHsv(Hue, 255, 200, 255)
 
-    # self.rl.add(self.makePoint(1, 1, col))
-    # self.rl.add(self.makePoint(-0.75, -0.75, col))
-    # self.rl.add(self.makePoint(0, 1 / 2, col))
-    #
-    # for i in range(360):
-    #     self.rl.add(self.makePoint(0.75 * np.cos(np.pi / 180 * i), 0.75 * np.sin(np.pi / 180 * i), col))
-    #
-    # col.setRgbF(0, 1, 1, 1)
-    # rct = self.makeRectangle(.5, .5, 0, 0, True, col)
-    # self.rl.add(rct)
-    #
-    # col.setRgbF(0, 0, 0, 1)
-    # rct = self.makeRectangle(.5, .5, 0, 0, False, col)
-    # self.rl.add(rct)
-    #
-    # col.setRgbF(1, 0, 1, 1)
-    # line = self.makeLine(-1, -.5, 0, 0.5, col)
-    # self.rl.add(line)
-    #
-    # # col.setRgbF(1,1, 0, 1)
-    # # cricle = self.makeCircle(-.5, -.5, 0.5, False, col)
-    # # self.rl.add(cricle)
-    #
-    # col.setRgbF(1, 0, 0, 1)
-    # cricle = self.makeCircle(-.5, -.5, 0.2, True, col)
-    # self.rl.add(cricle)
-    #
-    # col.setRgbF(1,1, 0, 1)
-    # cricle = self.makeCircle(-.5, -.5, 0.5, False, col)
-    # self.rl.add(cricle)
+        #WeightedFreqVal should be a value between 9 and 19 influenced by volume of sound coming in.
+        WeightedFreqVal = 14.0
+
+        Newx1 = (((WeightedFreqVal * self.RLData[0]) + self.RLData[6]) / (WeightedFreqVal + 1))
+        Newy1 = (((WeightedFreqVal * self.RLData[1]) + self.RLData[7]) / (WeightedFreqVal + 1))
+        Newx2 = (((WeightedFreqVal * self.RLData[2]) + self.RLData[0]) / (WeightedFreqVal + 1))
+        Newy2 = (((WeightedFreqVal * self.RLData[3]) + self.RLData[1]) / (WeightedFreqVal + 1))
+        Newx3 = (((WeightedFreqVal * self.RLData[4]) + self.RLData[2]) / (WeightedFreqVal + 1))
+        Newy3 = (((WeightedFreqVal * self.RLData[5]) + self.RLData[3]) / (WeightedFreqVal + 1))
+        Newx4 = (((WeightedFreqVal * self.RLData[6]) + self.RLData[4]) / (WeightedFreqVal + 1))
+        Newy4 = (((WeightedFreqVal * self.RLData[7]) + self.RLData[5]) / (WeightedFreqVal + 1))
+
+        self.rl.add(self.makeTriangle(self.RLData[0], self.RLData[1], Newx1, Newy1, Newx2, Newy2, True, TriCol))
+        self.rl.add(self.makeTriangle(self.RLData[2], self.RLData[3], Newx2, Newy2, Newx3, Newy3, True, TriCol))
+        self.rl.add(self.makeTriangle(self.RLData[4], self.RLData[5], Newx3, Newy3, Newx4, Newy4, True, TriCol))
+        self.rl.add(self.makeTriangle(self.RLData[6], self.RLData[7], Newx4, Newy4, Newx1, Newy1, True, TriCol))
+
+        self.rl.add(self.makeLine(self.RLData[0], self.RLData[1], self.RLData[2], self.RLData[3], LineCol))
+        self.rl.add(self.makeLine(self.RLData[2], self.RLData[3], self.RLData[4], self.RLData[5], LineCol))
+        self.rl.add(self.makeLine(self.RLData[4], self.RLData[5], self.RLData[6], self.RLData[7], LineCol))
+        self.rl.add(self.makeLine(self.RLData[6], self.RLData[7], self.RLData[0], self.RLData[1], LineCol))
+
+        self.RLData[0] = Newx1
+        self.RLData[2] = Newx2
+        self.RLData[4] = Newx3
+        self.RLData[6] = Newx4
+        self.RLData[1] = Newy1
+        self.RLData[3] = Newy2
+        self.RLData[5] = Newy3
+        self.RLData[7] = Newy4
