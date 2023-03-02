@@ -237,6 +237,82 @@ class ObjectListViewer(QWidget):
         else:
             qp.drawRect(rect)
 
+    def RenderTriangle(self, qp, obj):
+        if obj[7]:
+            self.FillTriangle(qp, obj)
+        else:
+            obj1 = [1, obj[1], obj[2], obj[3], obj[4], obj[8]]
+            obj2 = [1, obj[3], obj[4], obj[5], obj[6], obj[8]]
+            obj3 = [1, obj[5], obj[6], obj[1], obj[2], obj[8]]
+            self.RenderLine(qp, obj1)
+            self.RenderLine(qp, obj2)
+            self.RenderLine(qp, obj3)
+
+    def FillTriangle(self, qp, obj):
+        Resolution = 1000
+        Range = abs(obj[1] - obj[5])
+        MidPoint = obj[3]
+        MidPointY = obj[4]
+        if (obj[1] > obj[5]):
+            BegPoint = obj[5]
+            BegPointY = obj[6]
+            EndPoint = obj[1]
+            EndPointY = obj[2]
+        else:
+            BegPoint = obj[1]
+            BegPointY = obj[2]
+            EndPoint = obj[5]
+            EndPointY = obj[6]
+        for i in range(2):
+            if (abs(obj[(i * 2) + 1] - obj[((i + 1) * 2) + 1]) > Range):
+                Range = abs(obj[(i * 2) + 1] - obj[((i + 1) * 2) + 1])
+                if (i * 2 + 1) == 1:
+                    MidPoint = obj[5]
+                    MidPointY = obj[6]
+                    if (obj[1] > obj[3]):
+                        BegPoint = obj[3]
+                        BegPointY = obj[4]
+                        EndPoint = obj[1]
+                        EndPointY = obj[2]
+                    else:
+                        BegPoint = obj[1]
+                        BegPointY = obj[2]
+                        EndPoint = obj[3]
+                        EndPointY = obj[4]
+                elif (i * 2 + 1) == 3:
+                    MidPoint = obj[1]
+                    MidPointY = obj[2]
+                    if (obj[3] > obj[5]):
+                        BegPoint = obj[5]
+                        BegPointY = obj[6]
+                        EndPoint = obj[3]
+                        EndPointY = obj[4]
+                    else:
+                        BegPoint = obj[3]
+                        BegPointY = obj[4]
+                        EndPoint = obj[5]
+                        EndPointY = obj[6]
+        width = Range / Resolution
+        for i in range(Resolution):
+            StartingX = BegPoint + (i * width)
+            EndingX = BegPoint + ((i + 1) * width)
+            if EndPoint == MidPoint:
+                EndingY = ((((MidPointY - BegPointY) / (MidPoint - BegPoint)) * (EndingX - BegPoint)) + BegPointY)
+                StartingY = ((((EndPointY - BegPointY) / (EndPoint - BegPoint)) * (StartingX - BegPoint)) + BegPointY)
+            elif BegPoint == MidPoint:
+                EndingY = ((((EndPointY - BegPointY) / (EndPoint - BegPoint)) * (EndingX - BegPoint)) + BegPointY)
+                StartingY = ((((EndPointY - MidPointY) / (EndPoint - MidPoint)) * (StartingX - MidPoint)) + MidPointY)
+            else:
+                EndingY = ((((EndPointY - BegPointY) / (EndPoint - BegPoint)) * (EndingX - BegPoint)) + BegPointY)
+                if (StartingX >= MidPoint):
+                    StartingY = ((((EndPointY - MidPointY) / (EndPoint - MidPoint)) * (
+                                StartingX - MidPoint)) + MidPointY)
+                else:
+                    StartingY = ((((MidPointY - BegPointY) / (MidPoint - BegPoint)) * (
+                                StartingX - BegPoint)) + BegPointY)
+            objFill = [3, StartingX, StartingY, EndingX, EndingY, True, obj[8]]
+            self.RendeRectangle(qp, objFill)
+
     def paintEvent(self, event):
         """
         Paint event override, clears the screen, loops through the render list of
@@ -267,6 +343,8 @@ class ObjectListViewer(QWidget):
                 self.RenderCircle(qp, obj)
             elif obj[0] == 3:
                 self.RendeRectangle(qp, obj)
+            elif obj[0] == 4:
+                self.RenderTriangle(qp, obj)
 
         outline = QColor()
         outline.setRgb(0, 0, 0, 255)
@@ -362,6 +440,8 @@ class MusicPainter(QMainWindow):
         self.algorithmNum = QComboBox()
         for i in range(self.paintbrush.numberAlgorithms):
             self.algorithmNum.addItem(str(i + 1))
+
+        #self.algorithmNum.currentIndexChanged.connect(PaintBrush.SetAlg9)
 
         self.ChunkSizesList = [1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072]
         self.chunkSize = QComboBox()
@@ -605,14 +685,21 @@ class MusicPainter(QMainWindow):
         freqcap = 8500
 
         # precompute the frequency data.
+
         for i in range(len(channelChunks[0])):
             channelFreqs = []
+            CorSpect
             for k in range(channels):
                 spect, freq = self.getSpectrum(channelChunks[k][i], samplingfreq)
                 maxfreq = self.getMaxFreq(spect, freq)
                 channelFreqs.append(maxfreq)
 
             maxfreqch = max(channelFreqs)
+
+            for i in range(len(channelFreqs)):
+                if channelFreqs[i] == maxfreqch:
+                    CorSpect = spect[i]
+
             if maxfreqch > freqcap:
                 channelFreqs = [0, 0]
             self.freqlist.append(channelFreqs)
@@ -628,7 +715,7 @@ class MusicPainter(QMainWindow):
         i = 0
         while i < len(self.freqlist) and (not self.playsoundstop):
             if i < len(self.freqlist):
-                self.paintbrush.draw(self.freqlist[i], i)
+                self.paintbrush.draw(self.freqlist[i], i, CorSpect)
                 self.canvas.renderAll = False
                 self.canvas.update()
                 self.canvas.renderAll = True
@@ -740,6 +827,7 @@ class MusicPainter(QMainWindow):
             #     frame.append(numpydata[i::2])
 
             channelFreqs = []
+            CorSpect = 0
             for i in range(self.RECORDCHANNELS):
                 # channelData.append(numpydata[:, i])
                 # spect, freq = self.getSpectrum(frame[i], self.RECORDRATE)
@@ -748,18 +836,22 @@ class MusicPainter(QMainWindow):
                 channelFreqs.append(maxfreq)
 
             maxfreqch = max(channelFreqs)
+
+            for i in range(len(channelFreqs)):
+                if channelFreqs[i] == maxfreqch:
+                    CorSpect = spect[i]
+
             if maxfreqch > freqcap:
                 channelFreqs = [0, 0]
             self.freqlist.append(channelFreqs)
 
             if channelFreqs != [0, 0]:
                 pos = len(self.freqlist) - 1
-                self.paintbrush.draw(self.freqlist[pos], pos)
+                self.paintbrush.draw(self.freqlist[pos], pos, CorSpect)
                 self.canvas.renderAll = False
                 self.canvas.update()
                 self.canvas.renderAll = True
-
-            # print(channelFreqs)
+                #print(self.freqlist[pos])
 
             frames.append(data)
 
