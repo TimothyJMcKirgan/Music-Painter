@@ -657,12 +657,21 @@ class MusicPainter(QMainWindow):
         self.paintbrush.currentAlgorithm = self.algorithmNum.currentIndex() + 1
 
         samplingfreq, sound = wavfile.read(self.loadedFilename)
-        channels = sound.shape[1]
-        samples = sound.shape[0]
+        
+        if (len(sound.shape) > 1):
+            channels = sound.shape[1]
+            samples = sound.shape[0]
+        else:
+            channels = 1
+            samples = sound.shape[0]
 
         channelData = []
-        for i in range(channels):
-            channelData.append(sound[:, i])
+
+        if (len(sound.shape) > 1):
+            for i in range(channels):
+                channelData.append(sound[:, i])
+        else:
+            channelData.append(sound)
 
         channelChunks = []
         for i in range(channels):
