@@ -15,7 +15,7 @@ class PaintBrush:
         # 2. Add in new algorithm function.
         # 3. Add in additional elif in the draw function.
 
-        self.numberAlgorithms = 9
+        self.numberAlgorithms = 12
         self.currentAlgorithm = 1
 
     # Resets the links to the renderlist and frequency data in the main. S
@@ -96,6 +96,12 @@ class PaintBrush:
             self.algorithm8(data, datapos)
         elif self.currentAlgorithm == 9:
             self.algorithm9(data, spectdata)
+        elif self.currentAlgorithm == 10:
+            self.algorithm10(data)
+        elif self.currentAlgorithm == 11:
+            self.algorithm11(data)
+        elif self.currentAlgorithm == 12:
+            self.algorithm12(data)
 
     # Rendering Algorithms.
 
@@ -245,3 +251,50 @@ class PaintBrush:
         self.RLData[3] = Newy2
         self.RLData[5] = Newy3
         self.RLData[7] = Newy4
+        
+    bound = 0
+    lastX = 0
+    lastY = 0
+    def algorithm10(self, data):
+        self.bound += 0.1
+        theta = self.bound % np.pi * 2
+        amp = data[0] % 2
+
+        x = np.cos(theta) * amp
+        y = np.sin(theta) * amp
+
+        col = QColor()
+        col.setRgbF(1, 0, 1, 1)
+        self.rl.add(self.makeLine(self.lastX, self.lastY, x, y, col))
+
+        self.lastX = x
+        self.lastY = y
+
+    def algorithm11(self, data):
+        theta = data[0] % np.pi * 2
+        amp = data[0] % 2
+
+        x = np.cos(theta) * amp
+        y = np.sin(theta) * amp
+
+        col = QColor()
+        col.setRgbF(1, 0, 1, 1)
+        self.rl.add(self.makeLine(self.lastX, self.lastY, x, y, col))
+
+        self.lastX = x
+        self.lastY = y
+
+    def algorithm12(self, data):
+        self.bound += 0.05
+        theta = self.bound % np.pi * 2
+        amp = data[0] % 2
+
+        x = np.tan(theta) * amp
+        y = np.sin(theta) * amp
+
+        col = QColor()
+        col.setRgbF(1, 0, 1, 1)
+        self.rl.add(self.makeLine(self.lastX, self.lastY, x, y, col))
+
+        self.lastX = x
+        self.lastY = y
