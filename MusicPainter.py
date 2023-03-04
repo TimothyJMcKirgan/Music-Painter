@@ -697,7 +697,7 @@ class MusicPainter(QMainWindow):
 
         for i in range(len(channelChunks[0])):
             channelFreqs = []
-            CorSpect
+            CorSpect = 0
             for k in range(channels):
                 spect, freq = self.getSpectrum(channelChunks[k][i], samplingfreq)
                 maxfreq = self.getMaxFreq(spect, freq)
