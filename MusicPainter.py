@@ -441,7 +441,7 @@ class MusicPainter(QMainWindow):
         for i in range(self.paintbrush.numberAlgorithms):
             self.algorithmNum.addItem(str(i + 1))
 
-        #self.algorithmNum.currentIndexChanged.connect(PaintBrush.SetAlg9)
+        self.algorithmNum.currentIndexChanged.connect(self.resetRLData)
 
         self.ChunkSizesList = [1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072]
         self.chunkSize = QComboBox()
@@ -459,6 +459,10 @@ class MusicPainter(QMainWindow):
 
         self.setCentralWidget(self.canvas)
         self.show()
+        
+    def resetRLData(self):
+        if (self.algorithmNum.currentIndex() == 8):
+            self.paintbrush.SetAlg9()
 
     # Setup all menu and toolbar actions as well as create the menu.
     def createMenu(self):
