@@ -4,7 +4,7 @@ import numpy as np
 
 class PaintBrush:
     def __init__(self, parent=None):
-        self.RLData = [1, 1, 1, -1, -1, -1, -1, 1]
+        self.RLData = [0, 0, 0, 0, 0, 0, 0, 0]
         self.Parent = parent
         self.mainapp = parent
         self.rl = self.mainapp.rl
@@ -19,11 +19,9 @@ class PaintBrush:
         self.currentAlgorithm = 1
 
     # Resets the links to the renderlist and frequency data in the main. S
-
-    #def SetAlg9(self):
-        #print("This is algorithm 9")
-        #self.RLData.clear()
-        #self.RLData = [1, 1, 1, -1, -1, -1, -1, 1]
+    
+    def SetAlg9(self):
+        self.RLData = [1,1,1,-1,-1,-1,-1,1]
 
     def resetlistlinks(self):
         self.rl = self.mainapp.rl
