@@ -15,7 +15,7 @@ class PaintBrush:
         # 2. Add in new algorithm function.
         # 3. Add in additional elif in the draw function.
 
-        self.numberAlgorithms = 12
+        self.numberAlgorithms = 9
         self.currentAlgorithm = 1
 
     # Resets the links to the renderlist and frequency data in the main. S
@@ -85,27 +85,19 @@ class PaintBrush:
         if self.currentAlgorithm == 1:
             self.algorithm1(data)
         elif self.currentAlgorithm == 2:
-            self.algorithm2(data)
+            self.algorithm2(data, datapos)
         elif self.currentAlgorithm == 3:
             self.algorithm3(data, datapos)
         elif self.currentAlgorithm == 4:
-            self.algorithm4(data, datapos)
+            self.algorithm4(data, spectdata)
         elif self.currentAlgorithm == 5:
-            self.algorithm5(data, datapos)
+            self.algorithm5(data, spectdata)
         elif self.currentAlgorithm == 6:
-            self.algorithm6(data, datapos)
+            self.algorithm6(data, spectdata)
         elif self.currentAlgorithm == 7:
-            self.algorithm7(data, datapos)
-        elif self.currentAlgorithm == 8:
-            self.algorithm8(data, datapos)
+            self.algorithm7(data, spectdata)
         elif self.currentAlgorithm == 9:
             self.algorithm9(data, spectdata)
-        elif self.currentAlgorithm == 10:
-            self.algorithm10(data)
-        elif self.currentAlgorithm == 11:
-            self.algorithm11(data)
-        elif self.currentAlgorithm == 12:
-            self.algorithm12(data)
 
     # Rendering Algorithms.
 
@@ -123,17 +115,8 @@ class PaintBrush:
         clear.setRgbF(1, 1, 1, 1)
         self.rl.add(self.makeRectangle(-1, 1, 1, -1, True, clear))
         self.rl.add(self.makeTriangle(rx1, ry1, rx2, ry2, rx3, ry3, True, col))
-
-    def algorithm2(self, data):
-        rtheta = np.random.random() * 2 * np.pi
-        rx = np.cos(rtheta)
-        ry = np.sin(rtheta)
-
-        col = QColor()
-        col.setRgbF(np.random.random(), np.random.random(), np.random.random(), 1)
-        self.rl.add(self.makePoint(rx, ry, col))
-
-    def algorithm3(self, data, pos):
+        
+    def algorithm2(self, data, pos):
         numfreq = len(self.fl)
         maxfreq = 5000
         x = 2 * pos / numfreq - 1
@@ -148,61 +131,7 @@ class PaintBrush:
             col.setRgbF(0, 1, 0, 1)
             self.rl.add(self.makeLine(x, -.75, x, y - .75, col))
 
-    def algorithm4(self, data, pos):
-        numfreq = len(self.fl)
-        maxfreq = 5000
-        x = 2 * pos / numfreq - 1
-        y = data[0] / maxfreq
-
-        col = QColor()
-        col.setRgbF(1, 0, 0, 1)
-        self.rl.add(self.makePoint(x, y, col))
-
-        if len(data) > 1:
-            y = data[1] / maxfreq
-            col.setRgbF(0, .5, 0, 1)
-            self.rl.add(self.makePoint(x, y, col))
-
-    def algorithm5(self, data, pos):
-        numfreq = len(self.fl)
-        maxfreq = 5000
-        x = 2 * pos / numfreq - 1
-        y = data[0] / maxfreq
-
-        col = QColor()
-        col.setRgbF(0.5, 0.3, 0.7, 1)
-        self.rl.add(self.makePoint(x, y, col))
-
-        if len(data) > 1:
-            y = data[1] / maxfreq
-            col.setRgbF(1, .7, 0, 0.5)
-            self.rl.add(self.makePoint(x, y, col))
-
-    def algorithm6(self, data, pos):
-        numfreq = len(self.fl)
-        maxfreq = 2000
-        x = 2 * pos / numfreq - 1
-        y = data[0] / maxfreq * 2
-
-        col = QColor()
-        col.setRgbF(1, 0, 0, 1)
-        y = (sum(data) / len(data)) / maxfreq
-
-        self.rl.add(self.makeLine(x, -.5, x, y - .5, col))
-
-    def algorithm7(self, data, pos):
-        numfreq = len(self.fl)
-        maxfreq = 2000
-        x = 2 * pos / numfreq - 1
-        y = data[0] / maxfreq * 2
-
-        col = QColor()
-        col.setRgbF(1, 0, 0, 1)
-        y = (sum(data) / len(data)) / maxfreq
-
-        self.rl.add(self.makeRectangle(x, y, x + 0.01, y - 0.01, True, col))
-
-    def algorithm8(self, data, pos):
+    def algorithm3(self, data, pos):
         numfreq = len(self.fl)
         maxfreq = 2000
         x = 2 * pos / numfreq - 1
@@ -213,6 +142,67 @@ class PaintBrush:
         y = (sum(data) / len(data)) / maxfreq
 
         self.rl.add(self.makeCircle(x, y - 0.5, 0.01, True, col))
+        
+    def algorithm4(self, data, spectdata):
+        self.RLData[2] += 0.1
+        theta = self.bound % np.pi * 2
+        amp = data[0] % 1
+
+        x = np.cos(theta) * amp
+        y = np.sin(theta) * amp
+
+        col = QColor()
+        hue = spectdata
+        col.setHsv(hue, 255, 130, 255)
+        self.rl.add(self.makeLine(self.RLData[0], self.RLData[1], x, y, col))
+
+        self.RLData[0] = x
+        self.RLData[1] = y
+
+    def algorithm5(self, data, spectdata):
+        theta = data[0] % np.pi * 2
+        amp = data[0] % 1
+
+        x = np.cos(theta) * amp
+        y = np.sin(theta) * amp
+
+        col = QColor()
+        hue = spectdata
+        col.setHsv(hue, 255, 130, 255)
+        self.rl.add(self.makeLine(self.RLData[0], self.RLData[1], x, y, col))
+
+        self.RLData[0] = x
+        self.RLData[1] = y
+
+    def algorithm6(self, data, spectdata):
+        self.RLData[2] += 0.1
+        theta = self.bound % np.pi * 2
+
+        x = np.sin(10 * theta)
+        y = np.sin(8 * theta)
+
+        col = QColor()
+        hue = spectdata
+        col.setHsv(hue, 255, 130, 255)
+        self.rl.add(self.makeLine(self.RLData[0], self.RLData[1], x, y, col))
+
+        self.RLData[0] = x
+        self.RLData[1] = y
+        
+    def algorithm7(self, data, spectdata):
+        self.RLData[2] += 0.1
+        theta = self.bound % np.pi * 2
+
+        x = (np.cos(theta) - np.cos(9 * theta)) / 2
+        y = (np.sin(theta) - np.sin(9 * theta)) / 2
+
+        col = QColor()
+        hue = spectdata
+        col.setHsv(hue, 255, 130, 255)
+        self.rl.add(self.makeLine(self.RLData[0], self.RLData[1], x, y, col))
+
+        self.RLData[0] = x
+        self.RLData[1] = y
 
     def algorithm9(self, data, spect):
 
@@ -255,47 +245,3 @@ class PaintBrush:
         self.RLData[3] = Newy2
         self.RLData[5] = Newy3
         self.RLData[7] = Newy4
-
-    def algorithm10(self, data):
-        self.RLData[2] += 0.1
-        theta = self.RLData[2] % np.pi * 2
-        amp = data[0] % 2
-
-        x = np.cos(theta) * amp
-        y = np.sin(theta) * amp
-
-        col = QColor()
-        col.setRgbF(1, 0, 1, 1)
-        self.rl.add(self.makeLine(self.RLData[0], self.RLData[1], x, y, col))
-
-        self.RLData[0] = x
-        self.RLData[1] = y
-
-    def algorithm11(self, data):
-        theta = data[0] % np.pi * 2
-        amp = data[0] % 2
-
-        x = np.cos(theta) * amp
-        y = np.sin(theta) * amp
-
-        col = QColor()
-        col.setRgbF(1, 0, 1, 1)
-        self.rl.add(self.makeLine(self.RLData[0], self.RLData[1], x, y, col))
-
-        self.RLData[0] = x
-        self.RLData[1] = y
-
-    def algorithm12(self, data):
-        self.RLData[2] += 0.05
-        theta = self.RLData[2] % np.pi * 2
-        amp = data[0] % 2
-
-        x = np.tan(theta) * amp
-        y = np.sin(theta) * amp
-
-        col = QColor()
-        col.setRgbF(1, 0, 1, 1)
-        self.rl.add(self.makeLine(self.RLData[0], self.RLData[1], x, y, col))
-
-        self.RLData[0] = x
-        self.RLData[1] = y
