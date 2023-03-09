@@ -145,7 +145,7 @@ class PaintBrush:
         
     def algorithm4(self, data, spectdata):
         self.RLData[2] += 0.1
-        theta = self.bound % np.pi * 2
+        theta = self.RLData[2] % np.pi * 2
         amp = data[0] % 1
 
         x = np.cos(theta) * amp
@@ -176,7 +176,7 @@ class PaintBrush:
 
     def algorithm6(self, data, spectdata):
         self.RLData[2] += 0.1
-        theta = self.bound % np.pi * 2
+        theta = self.RLData[2] % np.pi * 2
 
         x = np.sin(10 * theta)
         y = np.sin(8 * theta)
@@ -191,7 +191,7 @@ class PaintBrush:
         
     def algorithm7(self, data, spectdata):
         self.RLData[2] += 0.1
-        theta = self.bound % np.pi * 2
+        theta = self.RLData[2] % np.pi * 2
 
         x = (np.cos(theta) - np.cos(9 * theta)) / 2
         y = (np.sin(theta) - np.sin(9 * theta)) / 2
