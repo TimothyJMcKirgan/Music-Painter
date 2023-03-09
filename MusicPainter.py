@@ -239,7 +239,8 @@ class ObjectListViewer(QWidget):
 
     def RenderTriangle(self, qp, obj):
         if obj[7]:
-            self.FillTriangle(qp, obj)
+            self.RiemannFill(qp, obj)
+            #self.FanFill(qp, obj)
         else:
             obj1 = [1, obj[1], obj[2], obj[3], obj[4], obj[8]]
             obj2 = [1, obj[3], obj[4], obj[5], obj[6], obj[8]]
@@ -248,8 +249,35 @@ class ObjectListViewer(QWidget):
             self.RenderLine(qp, obj2)
             self.RenderLine(qp, obj3)
 
-    def FillTriangle(self, qp, obj):
-        Resolution = 1000
+    def FanFill(self, qp, obj):
+        qp.setPen(obj[8])
+        Point1 = self.XYtoQPoint(obj[1], obj[2])
+        Point2 = self.XYtoQPoint(obj[3], obj[4])
+        Point3 = self.XYtoQPoint(obj[5], obj[6])
+        if (abs(Point2.x() - Point3.x()) != 0) and (Point2.x() < Point3.x()):
+            Origin = Point1
+            LinePoints = [Point2, Point3]
+        elif (abs(Point2.x() - Point3.x()) != 0) and (Point2.x() > Point3.x()):
+            Origin = Point1
+            LinePoints = [Point3, Point2]
+        elif (abs(Point2.x() - Point3.x()) == 0) and (Point3.x() < Point1.x()):
+            Origin = Point2
+            LinePoints = [Point3, Point1]
+        else:
+            Origin = Point2
+            LinePoints = [Point1, Point3]
+        Length = int(pow(pow(abs(LinePoints[1].x() - LinePoints[0].x()), 2) + pow(abs(LinePoints[1].y() - LinePoints[0].y()), 2), .5))
+        LineSlope = ((LinePoints[1].y() - LinePoints[0].y()) / (LinePoints[1].x() - LinePoints[0].x()))
+        for i in range(Length - 1):
+            XPoint = int((i + 1) * LineSlope)
+            YPoint = int(LinePoints[0].y() + LineSlope * (XPoint - LinePoints[0].x()))
+            NewPoint = QPoint(XPoint, YPoint)
+            line = QLine(Origin, NewPoint)
+            qp.drawLine(line)
+
+
+    def RiemannFill(self, qp, obj):
+        Resolution = 250
         Range = abs(obj[1] - obj[5])
         MidPoint = obj[3]
         MidPointY = obj[4]
@@ -306,10 +334,10 @@ class ObjectListViewer(QWidget):
                 EndingY = ((((EndPointY - BegPointY) / (EndPoint - BegPoint)) * (EndingX - BegPoint)) + BegPointY)
                 if (StartingX >= MidPoint):
                     StartingY = ((((EndPointY - MidPointY) / (EndPoint - MidPoint)) * (
-                                StartingX - MidPoint)) + MidPointY)
+                            StartingX - MidPoint)) + MidPointY)
                 else:
                     StartingY = ((((MidPointY - BegPointY) / (MidPoint - BegPoint)) * (
-                                StartingX - BegPoint)) + BegPointY)
+                            StartingX - BegPoint)) + BegPointY)
             objFill = [3, StartingX, StartingY, EndingX, EndingY, True, obj[8]]
             self.RendeRectangle(qp, objFill)
 
@@ -358,6 +386,7 @@ class RenderList:
     """
     Convenience class for storing a list of items to be rendered.
     """
+
     def __init__(self):
         self.renderlist = []
 
@@ -459,10 +488,14 @@ class MusicPainter(QMainWindow):
 
         self.setCentralWidget(self.canvas)
         self.show()
-        
+
     def resetRLData(self):
         if (self.algorithmNum.currentIndex() == 8):
             self.paintbrush.SetAlg9()
+        elif (self.algorithmNum.currentIndex() == 9 or self.algorithmNum.currentIndex() == 11):
+            self.paintbrush.SetAlg10And12()
+        elif (self.algorithmNum.currentIndex() == 10):
+            self.paintbrush.SetAlg11()
 
     # Setup all menu and toolbar actions as well as create the menu.
     def createMenu(self):
@@ -661,7 +694,7 @@ class MusicPainter(QMainWindow):
         self.paintbrush.currentAlgorithm = self.algorithmNum.currentIndex() + 1
 
         samplingfreq, sound = wavfile.read(self.loadedFilename)
-        
+
         if (len(sound.shape) > 1):
             channels = sound.shape[1]
             samples = sound.shape[0]
@@ -695,6 +728,7 @@ class MusicPainter(QMainWindow):
                          output=True)
 
         self.freqlist = []
+        self.SpectList = []
         freqcap = 8500
 
         # precompute the frequency data.
@@ -716,6 +750,7 @@ class MusicPainter(QMainWindow):
             if maxfreqch > freqcap:
                 channelFreqs = [0, 0]
             self.freqlist.append(channelFreqs)
+            self.SpectList.append(CorSpect)
             # self.setStatusText("Processing segment "+ str(i+1) + " of " + str(len(channelChunks[0])))
 
         rd_data = []
@@ -728,7 +763,7 @@ class MusicPainter(QMainWindow):
         i = 0
         while i < len(self.freqlist) and (not self.playsoundstop):
             if i < len(self.freqlist):
-                self.paintbrush.draw(self.freqlist[i], i, CorSpect)
+                self.paintbrush.draw(self.freqlist[i], i, self.SpectList[i])
                 self.canvas.renderAll = False
                 self.canvas.update()
                 self.canvas.renderAll = True
@@ -864,7 +899,7 @@ class MusicPainter(QMainWindow):
                 self.canvas.renderAll = False
                 self.canvas.update()
                 self.canvas.renderAll = True
-                #print(self.freqlist[pos])
+                # print(self.freqlist[pos])
 
             frames.append(data)
 
