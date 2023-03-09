@@ -23,11 +23,8 @@ class PaintBrush:
     def SetAlg9(self):
         self.RLData = [1, 1, 1, -1, -1, -1, -1, 1]
 
-    def SetAlg10And12(self):
+    def SetAlg467(self):
         self.RLData = [0, 0, 0]
-
-    def SetAlg11(self):
-        self.RLData = [0, 0]
 
     def resetlistlinks(self):
         self.rl = self.mainapp.rl
