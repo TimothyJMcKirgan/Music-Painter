@@ -492,10 +492,8 @@ class MusicPainter(QMainWindow):
     def resetRLData(self):
         if (self.algorithmNum.currentIndex() == 8):
             self.paintbrush.SetAlg9()
-        elif (self.algorithmNum.currentIndex() == 9 or self.algorithmNum.currentIndex() == 11):
-            self.paintbrush.SetAlg10And12()
-        elif (self.algorithmNum.currentIndex() == 10):
-            self.paintbrush.SetAlg11()
+        elif (self.algorithmNum.currentIndex() == 3 or self.algorithmNum.currentIndex() == 5 or self.algorithmNum.currentIndex() == 6):
+            self.paintbrush.SetAlg467()
 
     # Setup all menu and toolbar actions as well as create the menu.
     def createMenu(self):
