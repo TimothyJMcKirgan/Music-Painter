@@ -4,7 +4,7 @@ import numpy as np
 
 class PaintBrush:
     def __init__(self, parent=None):
-        self.RLData = [0, 0, 0, 0, 0, 0, 0, 0]
+        self.RLData = []
         self.Parent = parent
         self.mainapp = parent
         self.rl = self.mainapp.rl
@@ -19,9 +19,15 @@ class PaintBrush:
         self.currentAlgorithm = 1
 
     # Resets the links to the renderlist and frequency data in the main. S
-    
+
     def SetAlg9(self):
-        self.RLData = [1,1,1,-1,-1,-1,-1,1]
+        self.RLData = [1, 1, 1, -1, -1, -1, -1, 1]
+
+    def SetAlg10And12(self):
+        self.RLData = [0, 0, 0]
+
+    def SetAlg11(self):
+        self.RLData = [0, 0]
 
     def resetlistlinks(self):
         self.rl = self.mainapp.rl
@@ -194,7 +200,7 @@ class PaintBrush:
         col.setRgbF(1, 0, 0, 1)
         y = (sum(data) / len(data)) / maxfreq
 
-        self.rl.add(self.makeRectangle(x, y, x+0.01, y-0.01, True, col))
+        self.rl.add(self.makeRectangle(x, y, x + 0.01, y - 0.01, True, col))
 
     def algorithm8(self, data, pos):
         numfreq = len(self.fl)
@@ -206,7 +212,7 @@ class PaintBrush:
         col.setRgbF(1, 0, 0, 1)
         y = (sum(data) / len(data)) / maxfreq
 
-        self.rl.add(self.makeCircle(x, y-0.5, 0.01, True, col))
+        self.rl.add(self.makeCircle(x, y - 0.5, 0.01, True, col))
 
     def algorithm9(self, data, spect):
 
@@ -219,7 +225,7 @@ class PaintBrush:
         LineCol = QColor()
         LineCol.setHsv(Hue, 255, 200, 255)
 
-        #WeightedFreqVal should be a value between 9 and 19 influenced by volume of sound coming in.
+        # WeightedFreqVal should be a value between 9 and 19 influenced by volume of sound coming in.
         WeightedFreqVal = 14.0
 
         Newx1 = (((WeightedFreqVal * self.RLData[0]) + self.RLData[6]) / (WeightedFreqVal + 1))
@@ -249,13 +255,10 @@ class PaintBrush:
         self.RLData[3] = Newy2
         self.RLData[5] = Newy3
         self.RLData[7] = Newy4
-        
-    bound = 0
-    lastX = 0
-    lastY = 0
+
     def algorithm10(self, data):
-        self.bound += 0.1
-        theta = self.bound % np.pi * 2
+        self.RLData[2] += 0.1
+        theta = self.RLData[2] % np.pi * 2
         amp = data[0] % 2
 
         x = np.cos(theta) * amp
@@ -263,10 +266,10 @@ class PaintBrush:
 
         col = QColor()
         col.setRgbF(1, 0, 1, 1)
-        self.rl.add(self.makeLine(self.lastX, self.lastY, x, y, col))
+        self.rl.add(self.makeLine(self.RLData[0], self.RLData[1], x, y, col))
 
-        self.lastX = x
-        self.lastY = y
+        self.RLData[0] = x
+        self.RLData[1] = y
 
     def algorithm11(self, data):
         theta = data[0] % np.pi * 2
@@ -277,14 +280,14 @@ class PaintBrush:
 
         col = QColor()
         col.setRgbF(1, 0, 1, 1)
-        self.rl.add(self.makeLine(self.lastX, self.lastY, x, y, col))
+        self.rl.add(self.makeLine(self.RLData[0], self.RLData[1], x, y, col))
 
-        self.lastX = x
-        self.lastY = y
+        self.RLData[0] = x
+        self.RLData[1] = y
 
     def algorithm12(self, data):
-        self.bound += 0.05
-        theta = self.bound % np.pi * 2
+        self.RLData[2] += 0.05
+        theta = self.RLData[2] % np.pi * 2
         amp = data[0] % 2
 
         x = np.tan(theta) * amp
@@ -292,7 +295,7 @@ class PaintBrush:
 
         col = QColor()
         col.setRgbF(1, 0, 1, 1)
-        self.rl.add(self.makeLine(self.lastX, self.lastY, x, y, col))
+        self.rl.add(self.makeLine(self.RLData[0], self.RLData[1], x, y, col))
 
-        self.lastX = x
-        self.lastY = y
+        self.RLData[0] = x
+        self.RLData[1] = y
