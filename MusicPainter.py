@@ -4,7 +4,7 @@
 Created: 10/1/2022
 Revised: 10/16/2022
 
-@authors: Luke Zolenski & Don Spickler
+@authors: Luke Zolenski, Don Spickler, & Timothy McKirgan
 
 This program is a music/sound visualizer for frequency data from either a wav file or
 an input stream from a microphone.  It allows the user to set chunk size and rendering algorithm
@@ -249,33 +249,6 @@ class ObjectListViewer(QWidget):
             self.RenderLine(qp, obj2)
             self.RenderLine(qp, obj3)
 
-    def FanFill(self, qp, obj):
-        qp.setPen(obj[8])
-        Point1 = self.XYtoQPoint(obj[1], obj[2])
-        Point2 = self.XYtoQPoint(obj[3], obj[4])
-        Point3 = self.XYtoQPoint(obj[5], obj[6])
-        if (abs(Point2.x() - Point3.x()) != 0) and (Point2.x() < Point3.x()):
-            Origin = Point1
-            LinePoints = [Point2, Point3]
-        elif (abs(Point2.x() - Point3.x()) != 0) and (Point2.x() > Point3.x()):
-            Origin = Point1
-            LinePoints = [Point3, Point2]
-        elif (abs(Point2.x() - Point3.x()) == 0) and (Point3.x() < Point1.x()):
-            Origin = Point2
-            LinePoints = [Point3, Point1]
-        else:
-            Origin = Point2
-            LinePoints = [Point1, Point3]
-        Length = int(pow(pow(abs(LinePoints[1].x() - LinePoints[0].x()), 2) + pow(abs(LinePoints[1].y() - LinePoints[0].y()), 2), .5))
-        LineSlope = ((LinePoints[1].y() - LinePoints[0].y()) / (LinePoints[1].x() - LinePoints[0].x()))
-        for i in range(Length - 1):
-            XPoint = int((i + 1) * LineSlope)
-            YPoint = int(LinePoints[0].y() + LineSlope * (XPoint - LinePoints[0].x()))
-            NewPoint = QPoint(XPoint, YPoint)
-            line = QLine(Origin, NewPoint)
-            qp.drawLine(line)
-
-
     def RiemannFill(self, qp, obj):
         Resolution = 250
         Range = abs(obj[1] - obj[5])
@@ -490,10 +463,16 @@ class MusicPainter(QMainWindow):
         self.show()
 
     def resetRLData(self):
-        if (self.algorithmNum.currentIndex() == 8):
+        if (self.algorithmNum.currentIndex() == 5):
+            self.paintbrush.SetAlg6()
+        elif (self.algorithmNum.currentIndex() == 1 or self.algorithmNum.currentIndex() == 2 or self.algorithmNum.currentIndex() == 3):
+            self.paintbrush.SetAlg2345()
+        elif (self.algorithmNum.currentIndex() == 6):
+            self.paintbrush.SetAlg7()
+        elif (self.algorithmNum.currentIndex() == 7):
+            self.paintbrush.SetAlg8()
+        elif (self.algorithmNum.currentIndex() == 8):
             self.paintbrush.SetAlg9()
-        elif (self.algorithmNum.currentIndex() == 3 or self.algorithmNum.currentIndex() == 5 or self.algorithmNum.currentIndex() == 6):
-            self.paintbrush.SetAlg467()
 
     # Setup all menu and toolbar actions as well as create the menu.
     def createMenu(self):
