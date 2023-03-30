@@ -4,7 +4,7 @@
 Created: 10/1/2022
 Revised: 10/16/2022
 
-@authors: Luke Zolenski, Don Spickler, & Timothy McKirgan
+@authors: Luke Zolenski, Don Spickler, Kyle Tranfaglia & Timothy McKirgan
 
 This program is a music/sound visualizer for frequency data from either a wav file or
 an input stream from a microphone.  It allows the user to set chunk size and rendering algorithm
@@ -465,7 +465,7 @@ class MusicPainter(QMainWindow):
     def resetRLData(self):
         if (self.algorithmNum.currentIndex() == 5):
             self.paintbrush.SetAlg6()
-        elif (self.algorithmNum.currentIndex() == 1 or self.algorithmNum.currentIndex() == 2 or self.algorithmNum.currentIndex() == 3):
+        elif (self.algorithmNum.currentIndex() == 1 or self.algorithmNum.currentIndex() == 2 or self.algorithmNum.currentIndex() == 3 or self.algorithmNum.currentIndex() == 4):
             self.paintbrush.SetAlg2345()
         elif (self.algorithmNum.currentIndex() == 6):
             self.paintbrush.SetAlg7()
@@ -473,6 +473,8 @@ class MusicPainter(QMainWindow):
             self.paintbrush.SetAlg8()
         elif (self.algorithmNum.currentIndex() == 8):
             self.paintbrush.SetAlg9()
+        elif (self.algorithmNum.currentIndex() == 9):
+            self.paintbrush.SetAlg10()
 
     # Setup all menu and toolbar actions as well as create the menu.
     def createMenu(self):
