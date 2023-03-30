@@ -21,7 +21,7 @@ class PaintBrush:
         # 2. Add in new algorithm function.
         # 3. Add in additional elif in the draw function.
 
-        self.numberAlgorithms = 9
+        self.numberAlgorithms = 10
         self.currentAlgorithm = 1
 
     # Resets the links to the renderlist and frequency data in the main. S
@@ -42,6 +42,9 @@ class PaintBrush:
         self.RLData = [True, 0, 0]
         self.TriangleList = []
         self.LineList = []
+        
+    def SetAlg10(self):
+        self.RLData = [0,0]
 
     def getRBG(self, RBGVal):
         RBG = [0, 0, 0]
@@ -142,6 +145,8 @@ class PaintBrush:
             self.algorithm8(data, spectdata)
         elif self.currentAlgorithm == 9:
             self.algorithm9(data, spectdata)
+        elif self.currentAlgorithm == 10:
+            self.algorithm10(data, spectdata)
 
     # Rendering Algorithms.
 
@@ -196,8 +201,7 @@ class PaintBrush:
         y = np.sin(theta) * amp
 
         col = QColor()
-        hue = spectdata
-        col.setHsv(hue, 255, 130, 255)
+        col.setRgb(200, (spectdata % 200) + 55, (data[0] % 100) + 55, 255)
         self.rl.add(self.makeLine(self.RLData[0], self.RLData[1], x, y, col))
 
         self.RLData[0] = x
@@ -211,8 +215,7 @@ class PaintBrush:
         y = np.sin(theta) * amp
 
         col = QColor()
-        hue = spectdata
-        col.setHsv(hue, 255, 130, 255)
+        col.setRgb((spectdata % 155) + 100, 100, (data[0] % 155) + 100, 255)
         self.rl.add(self.makeLine(self.RLData[0], self.RLData[1], x, y, col))
 
         self.RLData[0] = x
@@ -226,8 +229,7 @@ class PaintBrush:
         y = np.sin(8 * theta)
 
         col = QColor()
-        hue = spectdata
-        col.setHsv(hue, 255, 130, 255)
+        col.setRgb(175, (spectdata % 200) + 55, (data[0] % 100) + 155, 255)
         self.rl.add(self.makeLine(self.RLData[0], self.RLData[1], x, y, col))
 
         self.RLData[0] = x
@@ -241,8 +243,7 @@ class PaintBrush:
         y = (np.sin(theta) - np.sin(9 * theta)) / 2
 
         col = QColor()
-        hue = spectdata
-        col.setHsv(hue, 255, 130, 255)
+        col.setRgb(50, (spectdata % 155) + 100, (data[0] % 155) + 100, 255)
         self.rl.add(self.makeLine(self.RLData[0], self.RLData[1], x, y, col))
 
         self.RLData[0] = x
@@ -495,6 +496,41 @@ class PaintBrush:
                 self.RLData[2] += 1
                 if (self.RLData[2] > (len(self.TriangleList) - 1)):
                     self.RLData[2] = 0
+                    
+    def algorithm10(self, data, spectdata):
+        self.RLData[0] += 0.5
+        self.RLData[1] += 0.5
+        theta = self.RLData[0] % np.pi * 2
+
+        if (self.RLData[1] <= np.pi):
+            x = np.cos(theta) / 1.06
+            y = np.sin(theta) / 1.06
+        elif (self.RLData[1] <= np.pi * 2):
+            x = np.cos(theta) / 1.28
+            y = np.sin(theta) / 1.28
+        elif (self.RLData[1] <= np.pi * 3):
+            x = np.cos(theta) / 1.6
+            y = np.sin(theta) / 1.6
+        elif (self.RLData[1] <= np.pi * 4):
+            x = np.cos(theta) / 2.1
+            y = np.sin(theta) / 2.1
+        elif (self.RLData[1] <= np.pi * 5):
+            x = np.cos(theta) / 2.95
+            y = np.sin(theta) / 2.95
+        elif (self.RLData[1] <= np.pi * 6):
+            x = np.cos(theta) / 4.8
+            y = np.sin(theta) / 4.8
+        elif (self.RLData[1] <= np.pi * 7):
+            x = np.cos(theta) / 12.0
+            y = np.sin(theta) / 12.0
+        else:
+            self.RLData[1] = 0
+
+        if (self.RLData[1] != 0):
+            col = QColor()
+            col.setRgb((spectdata % 100) + 155, 50, (data[0] % 55) + 200, 255)
+            self.rl.add(self.makeCircle(x, y, 0.05, True, col))
+
 
     def ValidTriangle(self, Triangle):
         Valid = True
