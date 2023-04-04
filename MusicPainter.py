@@ -455,6 +455,7 @@ class MusicPainter(QMainWindow):
 
         self.createMenu()
         self.createToolBar()
+        self.createLeftToolBar()
 
         # self.statusBar = QStatusBar()
         # self.setStatusBar(self.statusBar)
@@ -587,10 +588,20 @@ class MusicPainter(QMainWindow):
         image_menu.addAction(self.resetZoom_act)
         image_menu.addAction(self.resetCenterZoom_act)
         image_menu.addSeparator()
-        image_menu.addAction(self.clear_act)
+        #image_menu.addAction(self.clear_act)
 
         help_menu = menu_bar.addMenu('&Help')
         help_menu.addAction(self.help_about_act)
+
+    def createLeftToolBar(self):
+        PainterToolBar = QToolBar("Paint Settings", self)
+        self.addToolBar(Qt.LeftToolBarArea, PainterToolBar)
+
+        PainterToolBar.addAction(self.clear_act)
+        PainterToolBar.addWidget(QLabel("   Algorithm: "))
+        PainterToolBar.addWidget(self.algorithmNum)
+        PainterToolBar.addWidget(QLabel("   Chunk Size: "))
+        PainterToolBar.addWidget(self.chunkSize)
 
     # Set up toolbar
     def createToolBar(self):
@@ -615,12 +626,6 @@ class MusicPainter(QMainWindow):
         tool_bar.addSeparator()
         tool_bar.addAction(self.help_about_act)
         tool_bar.addSeparator()
-
-        tool_bar.addWidget(QLabel("   Algorithm: "))
-        tool_bar.addWidget(self.algorithmNum)
-
-        tool_bar.addWidget(QLabel("   Chunk Size: "))
-        tool_bar.addWidget(self.chunkSize)
 
     # Display information about program dialog box.
     def aboutDialog(self):
@@ -795,7 +800,7 @@ class MusicPainter(QMainWindow):
 
         if not self.music_thread:
             self.music_thread = Thread(target=self.dotheplay, args=(False,), daemon=True)
-            self.clearImage()
+            #self.clearImage()
 
         if self.music_thread.is_alive():
             return
@@ -810,7 +815,7 @@ class MusicPainter(QMainWindow):
 
         if not self.music_thread:
             self.music_thread = Thread(target=self.dotheplay, args=(True,), daemon=True)
-            self.clearImage()
+            #self.clearImage()
 
         if self.music_thread.is_alive():
             return
@@ -893,7 +898,7 @@ class MusicPainter(QMainWindow):
     def RecordSoundData(self):
         if not self.music_thread:
             self.music_thread = Thread(target=self.dotherecord, daemon=True)
-            self.clearImage()
+            #self.clearImage()
 
         if self.music_thread.is_alive():
             return
