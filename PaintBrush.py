@@ -42,9 +42,9 @@ class PaintBrush:
         self.RLData = [True, 0, 0]
         self.TriangleList = []
         self.LineList = []
-        
+
     def SetAlg10(self):
-        self.RLData = [0,0]
+        self.RLData = [0, 0]
 
     def getRBG(self, RBGVal):
         RBG = [0, 0, 0]
@@ -150,7 +150,7 @@ class PaintBrush:
 
     # Rendering Algorithms.
 
-    #def algorithm1(self, data):
+    # def algorithm1(self, data):
     #    rx1 = np.random.random() * 2 - 1
     #    ry1 = np.random.random() * 2 - 1
     #    rx2 = np.random.random() * 2 - 1
@@ -165,7 +165,7 @@ class PaintBrush:
     #    self.rl.add(self.makeRectangle(-1, 1, 1, -1, True, clear))
     #    self.rl.add(self.makeTriangle(rx1, ry1, rx2, ry2, rx3, ry3, True, col))
 
-    #def algorithm2(self, data, pos):
+    # def algorithm2(self, data, pos):
     #    numfreq = len(self.fl)
     #    maxfreq = 5000
     #    x = 2 * pos / numfreq - 1
@@ -258,9 +258,9 @@ class PaintBrush:
         LineCol = QColor()
         LineCol.setHsv(Hue, 0, 200, 255)
 
-        if(spect >= 200000):
+        if (spect >= 200000):
             WeightedFreqVal = 15.0
-        elif(spect <= 10000):
+        elif (spect <= 10000):
             WeightedFreqVal = 30
         else:
             WeightedFreqVal = ((((spect - 10000) / 190000) * 15) + 15)
@@ -294,10 +294,10 @@ class PaintBrush:
         self.RLData[7] = Newy4
 
     def algorithm7(self, data, spect):
-        if(self.RLData[3]):
+        if (self.RLData[3]):
             self.RLData[4] = data[0]
         else:
-            if(data[0] > self.RLData[4]):
+            if (data[0] > self.RLData[4]):
                 self.RLData[4] = data[0]
 
         RedGreen = ((data[0] / self.RLData[4]) * 510) - 255
@@ -324,26 +324,26 @@ class PaintBrush:
 
         P1x = self.RLData[1] * np.cos((self.RLData[0] * .5) + self.RLData[2])
         P1y = self.RLData[1] * np.sin((self.RLData[0] * .5) + self.RLData[2])
-        P2x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 2/11)) + self.RLData[2])
-        P2y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 2/11)) + self.RLData[2])
-        P3x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 4/11)) + self.RLData[2])
-        P3y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 4/11)) + self.RLData[2])
-        P4x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 6/11)) + self.RLData[2])
-        P4y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 6/11)) + self.RLData[2])
-        P5x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 8/11)) + self.RLData[2])
-        P5y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 8/11)) + self.RLData[2])
-        P6x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 10/11)) + self.RLData[2])
-        P6y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 10/11)) + self.RLData[2])
-        P7x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 12/11)) + self.RLData[2])
-        P7y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 12/11)) + self.RLData[2])
-        P8x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 14/11)) + self.RLData[2])
-        P8y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 14/11)) + self.RLData[2])
-        P9x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 16/11)) + self.RLData[2])
-        P9y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 16/11)) + self.RLData[2])
-        P10x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 18/11)) + self.RLData[2])
-        P10y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 18/11)) + self.RLData[2])
-        P11x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 20/11)) + self.RLData[2])
-        P11y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 20/11)) + self.RLData[2])
+        P2x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 2 / 11)) + self.RLData[2])
+        P2y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 2 / 11)) + self.RLData[2])
+        P3x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 4 / 11)) + self.RLData[2])
+        P3y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 4 / 11)) + self.RLData[2])
+        P4x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 6 / 11)) + self.RLData[2])
+        P4y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 6 / 11)) + self.RLData[2])
+        P5x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 8 / 11)) + self.RLData[2])
+        P5y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 8 / 11)) + self.RLData[2])
+        P6x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 10 / 11)) + self.RLData[2])
+        P6y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 10 / 11)) + self.RLData[2])
+        P7x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 12 / 11)) + self.RLData[2])
+        P7y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 12 / 11)) + self.RLData[2])
+        P8x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 14 / 11)) + self.RLData[2])
+        P8y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 14 / 11)) + self.RLData[2])
+        P9x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 16 / 11)) + self.RLData[2])
+        P9y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 16 / 11)) + self.RLData[2])
+        P10x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 18 / 11)) + self.RLData[2])
+        P10y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 18 / 11)) + self.RLData[2])
+        P11x = self.RLData[1] * np.cos((self.RLData[0] * (.5 - 20 / 11)) + self.RLData[2])
+        P11y = self.RLData[1] * np.sin((self.RLData[0] * (.5 - 20 / 11)) + self.RLData[2])
 
         self.rl.add(self.makeLine(P1x, P1y, P6x, P6y, LineCol))
         self.rl.add(self.makeLine(P6x, P6y, P11x, P11y, LineCol))
@@ -363,7 +363,7 @@ class PaintBrush:
         if (self.RLData[5] == False and self.RLData[1] < .1):
             self.RLData[5] = True
         self.RLData[2] += .03
-        if(self.RLData[3]):
+        if (self.RLData[3]):
             self.RLData[3] = False
 
     def algorithm8(self, data, spect):
@@ -440,7 +440,9 @@ class PaintBrush:
             self.LineList.append(Line2)
             self.LineList.append(Line3)
             self.TriangleList.append(Triangle)
-            self.rl.add(self.makeTriangle(Triangle[0][0], Triangle[0][1], Triangle[1][0], Triangle[1][1], Triangle[2][0], Triangle[2][1], True, TriCol))
+            self.rl.add(
+                self.makeTriangle(Triangle[0][0], Triangle[0][1], Triangle[1][0], Triangle[1][1], Triangle[2][0],
+                                  Triangle[2][1], True, TriCol))
             self.RLData[0] = False
         else:
             if len(self.LineList) > 0:
@@ -457,7 +459,8 @@ class PaintBrush:
                     MidPoint = [((Line[0][0] + Line[1][0]) / 2), ((Line[0][1] + Line[1][1]) / 2)]
                     UsedTri = []
                     for i in self.TriangleList:
-                        if ((Line[0] == i[0]) or (Line[0] == i[1]) or (Line[0] == i[2])) and ((Line[1] == i[0]) or (Line[1] == i[1]) or (Line[1] == i[2])):
+                        if ((Line[0] == i[0]) or (Line[0] == i[1]) or (Line[0] == i[2])) and (
+                                (Line[1] == i[0]) or (Line[1] == i[1]) or (Line[1] == i[2])):
                             UsedTri = i
                     if (UsedTri[0][0] == UsedTri[1][0]) or (UsedTri[0][1] == UsedTri[1][1]):
                         Line1 = [UsedTri[1], UsedTri[2]]
@@ -472,7 +475,8 @@ class PaintBrush:
                     Line1MidPoint = [((Line1[0][0] + Line1[1][0]) / 2), ((Line1[0][1] + Line1[1][1]) / 2)]
                     Line2Normal = -1 / ((Line2[1][1] - Line2[0][1]) / (Line2[1][0] - Line2[0][0]))
                     Line2MidPoint = [((Line2[0][0] + Line2[1][0]) / 2), ((Line2[0][1] + Line2[1][1]) / 2)]
-                    XPos = (((-1 * Line2Normal * Line2MidPoint[0]) + Line2MidPoint[1] + (Line1Normal * Line1MidPoint[0]) - Line1MidPoint[1]) / (Line1Normal - Line2Normal))
+                    XPos = (((-1 * Line2Normal * Line2MidPoint[0]) + Line2MidPoint[1] + (
+                                Line1Normal * Line1MidPoint[0]) - Line1MidPoint[1]) / (Line1Normal - Line2Normal))
                     YPos = Line1Normal * (XPos - Line1MidPoint[0]) + Line1MidPoint[1]
                     TriPoint = [XPos, YPos]
                     DeltaX = MidPoint[0] - TriPoint[0]
@@ -487,16 +491,19 @@ class PaintBrush:
                         self.LineList.append(Line1)
                         self.LineList.append(Line2)
                         self.TriangleList.append(Triangle)
-                        self.rl.add(self.makeTriangle(Triangle[0][0], Triangle[0][1], Triangle[1][0], Triangle[1][1], Triangle[2][0], Triangle[2][1], True, TriCol))
+                        self.rl.add(self.makeTriangle(Triangle[0][0], Triangle[0][1], Triangle[1][0], Triangle[1][1],
+                                                      Triangle[2][0], Triangle[2][1], True, TriCol))
                         FoundTri = True
                     self.LineList.pop(LineIndex)
             else:
                 Triangle = self.TriangleList[self.RLData[2]]
-                self.rl.add(self.makeTriangle(Triangle[0][0], Triangle[0][1], Triangle[1][0], Triangle[1][1], Triangle[2][0], Triangle[2][1], True, TriCol))
+                self.rl.add(
+                    self.makeTriangle(Triangle[0][0], Triangle[0][1], Triangle[1][0], Triangle[1][1], Triangle[2][0],
+                                      Triangle[2][1], True, TriCol))
                 self.RLData[2] += 1
                 if (self.RLData[2] > (len(self.TriangleList) - 1)):
                     self.RLData[2] = 0
-                    
+
     def algorithm10(self, data, spectdata):
         self.RLData[0] += 0.5
         self.RLData[1] += 0.5
@@ -530,7 +537,6 @@ class PaintBrush:
             col = QColor()
             col.setRgb((spectdata % 100) + 155, 50, (data[0] % 55) + 200, 255)
             self.rl.add(self.makeCircle(x, y, 0.05, True, col))
-
 
     def ValidTriangle(self, Triangle):
         Valid = True
@@ -572,9 +578,9 @@ class PaintBrush:
             Valid = False
         return Valid
 
-    #https://bryceboe.com/2006/10/23/line-segment-intersection-algorithm/
-    #Author: Bryce Boe
-    #Last Updated: 03/27/2023
+    # https://bryceboe.com/2006/10/23/line-segment-intersection-algorithm/
+    # Author: Bryce Boe
+    # Last Updated: 03/27/2023
 
     def ccw(self, Point1, Point2, Point3):
         return (Point3[1] - Point1[1]) * (Point2[0] - Point1[0]) > (Point2[1] - Point1[1]) * (Point3[0] - Point1[0])
