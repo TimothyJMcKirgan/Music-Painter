@@ -86,10 +86,10 @@ class ObjectListViewer(QWidget):
         self.mousePosition = [0, 0]
         self.mouseDown = False
         self.setMouseTracking(True)
-    
+
     def SetBackCol(self):
         self.backgroundcolor = QColorDialog.getColor()
-        self.update()  
+        self.update()
 
     def resetCenter(self):
         """
@@ -244,7 +244,7 @@ class ObjectListViewer(QWidget):
     def RenderTriangle(self, qp, obj):
         if obj[7]:
             self.RiemannFill(qp, obj)
-            #self.FanFill(qp, obj)
+            # self.FanFill(qp, obj)
         else:
             obj1 = [1, obj[1], obj[2], obj[3], obj[4], obj[8]]
             obj2 = [1, obj[3], obj[4], obj[5], obj[6], obj[8]]
@@ -391,7 +391,7 @@ class MusicPainter(QMainWindow):
         super().__init__()
         self.Parent = parent
         self.mainapp = self
-        #self.setStyleSheet('Background-color: grey;')
+        # self.setStyleSheet('Background-color: grey;')
 
         # About information for the app.
         self.authors = "Luke Zolenski, Don Spickler, Kyle Tranfaglia, & Timothy McKirgan"
@@ -443,7 +443,7 @@ class MusicPainter(QMainWindow):
         elif self.loadedFilename != "":
             title = title + " - " + self.loadedFilename
         self.setWindowTitle(title)
-        
+
     def SetFile(self):
         if (len(self.loadedFiles) >= 1):
             self.loadedFilename = self.loadedFiles[self.ChosenFile.currentIndex()]
@@ -452,6 +452,7 @@ class MusicPainter(QMainWindow):
 
     # Initialize the window, calls create methods to set up the GUI.
     def initializeUI(self):
+        self.canvas = ObjectListViewer(self, self)
         self.setMinimumSize(800, 600)
         self.updateProgramWindowTitle()
         icon = QIcon(self.resource_path("icons/Logo-blackv2.png"))
@@ -459,27 +460,27 @@ class MusicPainter(QMainWindow):
 
         self.clearButton = QPushButton()
         self.clearButton.setStyleSheet('Background-color: #d1e7f0')
-        self.clearButton.setText('Background Color')
-        self.clearButton.setFixedSize(100, 28)
+        self.clearButton.setText('Clear Image')
+        #self.clearButton.setFixedSize(100, 28)
         self.clearButton.clicked.connect(self.clearImage)
-        
+
         self.ColorButton = QPushButton()
         self.ColorButton.setStyleSheet('Background-color: #d1e7f0')
-        self.ColorButton.setText('Clear Image')
-        self.ColorButton.setFixedSize(100, 28)
+        self.ColorButton.setText('Background Color')
+        #self.ColorButton.setFixedSize(100, 28)
         self.ColorButton.clicked.connect(self.canvas.SetBackCol)
-        
+
         self.DirectorySelect = QPushButton()
         self.DirectorySelect.setStyleSheet('Background-color: #d1e7f0')
         self.DirectorySelect.setText('Open Directory')
-        self.DirectorySelect.setFixedSize(100, 28)
+        #self.DirectorySelect.setFixedSize(100, 28)
         self.DirectorySelect.clicked.connect(self.openDirectory)
 
         self.algorithmNum = QComboBox()
-        self.algorithmNum.setFixedSize(135,28)
+        self.algorithmNum.setFixedSize(135, 28)
         # for i in range(self.paintbrush.numberAlgorithms):
         #     self.algorithmNum.addItem(str(i + 1))
-        
+
         self.ChosenFile = QComboBox()
         for i in range(len(self.loadedFiles)):
             self.ChosenFile.addItem(self.loadedFiles[i])
@@ -496,17 +497,15 @@ class MusicPainter(QMainWindow):
         self.algorithmNum.addItem(str('Spiraling Circles'))
 
         self.algorithmNum.currentIndexChanged.connect(self.resetRLData)
-        
+
         self.ChosenFile.currentIndexChanged.connect(self.SetFile)
 
         self.ChunkSizesList = [1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072]
         self.chunkSize = QComboBox()
-        self.chunkSize.setFixedSize(135,28)
+        self.chunkSize.setFixedSize(135, 28)
         for val in self.ChunkSizesList:
             self.chunkSize.addItem(str(val))
         self.chunkSize.setCurrentIndex(4)
-
-        self.canvas = ObjectListViewer(self, self)
 
         self.createMenu()
         self.createToolBar()
@@ -522,7 +521,8 @@ class MusicPainter(QMainWindow):
     def resetRLData(self):
         if (self.algorithmNum.currentIndex() == 5):
             self.paintbrush.SetAlg6()
-        elif (self.algorithmNum.currentIndex() == 1 or self.algorithmNum.currentIndex() == 2 or self.algorithmNum.currentIndex() == 3 or self.algorithmNum.currentIndex() == 4):
+        elif (
+                self.algorithmNum.currentIndex() == 1 or self.algorithmNum.currentIndex() == 2 or self.algorithmNum.currentIndex() == 3 or self.algorithmNum.currentIndex() == 4):
             self.paintbrush.SetAlg2345()
         elif (self.algorithmNum.currentIndex() == 6):
             self.paintbrush.SetAlg7()
@@ -532,7 +532,7 @@ class MusicPainter(QMainWindow):
             self.paintbrush.SetAlg9()
         elif (self.algorithmNum.currentIndex() == 9):
             self.paintbrush.SetAlg10()
-        
+
         if ((self.algorithmNum.currentIndex() == 5) or (self.algorithmNum.currentIndex() == 8)):
             self.ChunkSizesList = [16384, 32768, 65536, 131072]
             self.chunkSize.clear()
@@ -558,7 +558,8 @@ class MusicPainter(QMainWindow):
         self.printImage_act.triggered.connect(self.printImage)
         self.printImage_act.setStatusTip("Print the image.")
 
-        self.printPreviewImage_act = QAction(QIcon(self.resource_path('icons/colored/printer-network.png')), "Print Pre&view...", self)
+        self.printPreviewImage_act = QAction(QIcon(self.resource_path('icons/colored/printer-network.png')),
+                                             "Print Pre&view...", self)
         self.printPreviewImage_act.triggered.connect(self.printPreviewImage)
         self.printPreviewImage_act.setStatusTip("Print preview the image.")
 
@@ -582,7 +583,7 @@ class MusicPainter(QMainWindow):
         self.clear_act = QAction("&Clear Image", self)
         self.clear_act.triggered.connect(self.clearImage)
         self.clear_act.setStatusTip("Clear the image.")
-        
+
         self.setColor = QAction("Background Color", self)
         self.setColor.triggered.connect(self.canvas.SetBackCol)
         self.setColor.setStatusTip("Choose background color for image.")
@@ -595,15 +596,18 @@ class MusicPainter(QMainWindow):
         self.resetCenter_act.triggered.connect(self.canvas.resetCenter)
         self.resetCenter_act.setStatusTip("Reset the center to the origin.")
 
-        self.resetZoom_act = QAction(QIcon(self.resource_path('icons/colored/magnifier-history.png')), "Reset Zoom", self)
+        self.resetZoom_act = QAction(QIcon(self.resource_path('icons/colored/magnifier-history.png')), "Reset Zoom",
+                                     self)
         self.resetZoom_act.triggered.connect(self.canvas.resetZoom)
         self.resetZoom_act.setStatusTip("Reset the zoom factor to 1.")
 
-        self.resetCenterZoom_act = QAction(QIcon(self.resource_path('icons/colored/magnifier-zoom-fit.png')), "Reset Center and Zoom", self)
+        self.resetCenterZoom_act = QAction(QIcon(self.resource_path('icons/colored/magnifier-zoom-fit.png')),
+                                           "Reset Center and Zoom", self)
         self.resetCenterZoom_act.triggered.connect(self.canvas.resetCenterAndZoom)
         self.resetCenterZoom_act.setStatusTip("Reset the center to the origin and zoom factor to 1.")
 
-        self.properties_act = QAction(QIcon(self.resource_path('icons/colored/infocard.png')), "File &Information...", self)
+        self.properties_act = QAction(QIcon(self.resource_path('icons/colored/infocard.png')), "File &Information...",
+                                      self)
         self.properties_act.triggered.connect(self.SoundDataProperties)
         self.properties_act.setStatusTip("View the wav file information.")
 
@@ -623,7 +627,8 @@ class MusicPainter(QMainWindow):
         self.saverecording_act.triggered.connect(self.SaveRecording)
         self.saverecording_act.setStatusTip("Save recorded sound to wav file.")
 
-        self.stoprecord_act = QAction(QIcon(self.resource_path('icons/Colored/control-pause.png')), "&Stop Recording", self)
+        self.stoprecord_act = QAction(QIcon(self.resource_path('icons/Colored/control-pause.png')), "&Stop Recording",
+                                      self)
         self.stoprecord_act.triggered.connect(self.StopRecordData)
         self.stoprecord_act.setStatusTip("Stop recording.")
 
@@ -631,7 +636,8 @@ class MusicPainter(QMainWindow):
         selectTheme_act.triggered.connect(self.SelectTheme)
 
         # Create help menu actions
-        self.help_about_act = QAction(QIcon(self.resource_path('icons/Colored/information-frame.png')), "&About...", self)
+        self.help_about_act = QAction(QIcon(self.resource_path('icons/Colored/information-frame.png')), "&About...",
+                                      self)
         self.help_about_act.triggered.connect(self.aboutDialog)
         self.help_about_act.setStatusTip("Information about the program.")
 
@@ -665,7 +671,7 @@ class MusicPainter(QMainWindow):
         image_menu.addAction(self.resetZoom_act)
         image_menu.addAction(self.resetCenterZoom_act)
         image_menu.addSeparator()
-        #image_menu.addAction(self.clear_act)
+        # image_menu.addAction(self.clear_act)
 
         help_menu = menu_bar.addMenu('&Help')
         help_menu.addAction(self.help_about_act)
@@ -696,7 +702,7 @@ class MusicPainter(QMainWindow):
         #                      "font: ariel 14px;" "border-color: black;" "border-radius: 3px")
         # label2.setMaximumSize(100, 20)
 
-        layout.addSpacing(100)
+        #layout.addSpacing(100)
         layout.addWidget(self.clearButton, 0, Qt.AlignRight)
         layout.addWidget(QLabel("Algorithm:"), 0, Qt.AlignRight)
         layout.addWidget(self.algorithmNum)
@@ -717,7 +723,7 @@ class MusicPainter(QMainWindow):
     # Set up toolbar
     def createToolBar(self):
         tool_bar = QToolBar("Main Toolbar")
-        #tool_bar.setIconSize(QSize(20, 20))
+        # tool_bar.setIconSize(QSize(20, 20))
         tool_bar.setIconSize(tool_bar.iconSize())
         self.addToolBar(tool_bar)
 
@@ -912,7 +918,7 @@ class MusicPainter(QMainWindow):
 
         if not self.music_thread:
             self.music_thread = Thread(target=self.dotheplay, args=(False,), daemon=True)
-            #self.clearImage()
+            # self.clearImage()
 
         if self.music_thread.is_alive():
             return
@@ -927,7 +933,7 @@ class MusicPainter(QMainWindow):
 
         if not self.music_thread:
             self.music_thread = Thread(target=self.dotheplay, args=(True,), daemon=True)
-            #self.clearImage()
+            # self.clearImage()
 
         if self.music_thread.is_alive():
             return
@@ -1023,7 +1029,7 @@ class MusicPainter(QMainWindow):
     def RecordSoundData(self):
         if not self.music_thread:
             self.music_thread = Thread(target=self.dotherecord, daemon=True)
-            #self.clearImage()
+            # self.clearImage()
 
         if self.music_thread.is_alive():
             return
@@ -1120,22 +1126,23 @@ class MusicPainter(QMainWindow):
         pixmap = QPixmap(self.canvas.size())
         self.canvas.render(pixmap)
         self.clipboard.setPixmap(pixmap)
-        
+
     # https://www.geeksforgeeks.org/how-to-iterate-over-files-in-directory-using-python/
     # Author: chetankhanna767
     # Last Updated: 04/19/2023
     def openDirectory(self):
         self.loadedFiles = []
         _OutputFolder = QFileDialog.getExistingDirectory(self, "Select Output Folder", QDir.currentPath())
-        for filename in os.listdir(_OutputFolder):
-            f = os.path.join(_OutputFolder, filename)
-            TestString = f + "."
-            TestString = TestString[-5:-1]
-            if (os.path.isfile(f) and TestString == ".wav"):
-                self.loadedFiles.append(f)
-        self.ChosenFile.clear()
-        for i in range(len(self.loadedFiles)):
-            self.ChosenFile.addItem(self.loadedFiles[i])
+        if (_OutputFolder != ''):
+            for filename in os.listdir(_OutputFolder):
+                f = os.path.join(_OutputFolder, filename)
+                TestString = f + "."
+                TestString = TestString[-5:-1]
+                if (os.path.isfile(f) and TestString == ".wav"):
+                    self.loadedFiles.append(f)
+            self.ChosenFile.clear()
+            for i in range(len(self.loadedFiles)):
+                self.ChosenFile.addItem(self.loadedFiles[i])
 
     # Saves the current image to an image file.  Defaults to a png file but the file type
     # is determined by the extension on the filename the user selects.
@@ -1221,6 +1228,7 @@ class MusicPainter(QMainWindow):
     # Ending dummy function for print completion.
     def print_completed(self, success):
         pass  # Nothing needs to be done.
+
 
 if __name__ == '__main__':
     """
