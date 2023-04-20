@@ -447,13 +447,14 @@ class MusicPainter(QMainWindow):
     def SetFile(self):
         if (len(self.loadedFiles) >= 1):
             self.loadedFilename = self.loadedFiles[self.ChosenFile.currentIndex()]
+            self.updateProgramWindowTitle()
         else:
             self.loadedFilename = ""
 
     # Initialize the window, calls create methods to set up the GUI.
     def initializeUI(self):
         self.canvas = ObjectListViewer(self, self)
-        self.setMinimumSize(800, 600)
+        self.setMinimumSize(950, 700)
         self.updateProgramWindowTitle()
         icon = QIcon(self.resource_path("icons/Logo-blackv2.png"))
         self.setWindowIcon(icon)
@@ -461,27 +462,28 @@ class MusicPainter(QMainWindow):
         self.clearButton = QPushButton()
         self.clearButton.setStyleSheet('Background-color: #d1e7f0')
         self.clearButton.setText('Clear Image')
-        #self.clearButton.setFixedSize(100, 28)
+        self.clearButton.setFixedSize(90, 28)
         self.clearButton.clicked.connect(self.clearImage)
 
         self.ColorButton = QPushButton()
-        self.ColorButton.setStyleSheet('Background-color: #d1e7f0')
+        self.ColorButton.setStyleSheet('Background-color: #deddd9')
         self.ColorButton.setText('Background Color')
-        #self.ColorButton.setFixedSize(100, 28)
+        self.ColorButton.setFixedSize(120, 28)
         self.ColorButton.clicked.connect(self.canvas.SetBackCol)
 
         self.DirectorySelect = QPushButton()
-        self.DirectorySelect.setStyleSheet('Background-color: #d1e7f0')
+        self.DirectorySelect.setStyleSheet('Background-color: #f5f0d0')
         self.DirectorySelect.setText('Open Directory')
-        #self.DirectorySelect.setFixedSize(100, 28)
+        self.DirectorySelect.setFixedSize(100, 28)
         self.DirectorySelect.clicked.connect(self.openDirectory)
 
         self.algorithmNum = QComboBox()
-        self.algorithmNum.setFixedSize(135, 28)
+        self.algorithmNum.setFixedSize(130, 28)
         # for i in range(self.paintbrush.numberAlgorithms):
         #     self.algorithmNum.addItem(str(i + 1))
 
         self.ChosenFile = QComboBox()
+        self.ChosenFile.setFixedSize(90, 28)
         for i in range(len(self.loadedFiles)):
             self.ChosenFile.addItem(self.loadedFiles[i])
 
@@ -502,7 +504,7 @@ class MusicPainter(QMainWindow):
 
         self.ChunkSizesList = [1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072]
         self.chunkSize = QComboBox()
-        self.chunkSize.setFixedSize(135, 28)
+        self.chunkSize.setFixedSize(130, 28)
         for val in self.ChunkSizesList:
             self.chunkSize.addItem(str(val))
         self.chunkSize.setCurrentIndex(4)
@@ -548,17 +550,17 @@ class MusicPainter(QMainWindow):
 
     # Setup all menu and toolbar actions as well as create the menu.
     def createMenu(self):
-        self.file_open_act = QAction(QIcon(self.resource_path('icons/16/096.png')), "&Open Wav File...", self)
+        self.file_open_act = QAction(QIcon(self.resource_path('icons/48x48/OpenFile.png')), "&Open Wav File...", self)
         self.file_open_act.setShortcut('Ctrl+O')
         self.file_open_act.triggered.connect(self.openFile)
         self.file_open_act.setStatusTip("Open a wav file for rendering.")
 
-        self.printImage_act = QAction(QIcon(self.resource_path('icons/colored/printer.png')), "&Print...", self)
+        self.printImage_act = QAction(QIcon(self.resource_path('icons/48x48/Printer.png')), "&Print...", self)
         self.printImage_act.setShortcut('Ctrl+P')
         self.printImage_act.triggered.connect(self.printImage)
         self.printImage_act.setStatusTip("Print the image.")
 
-        self.printPreviewImage_act = QAction(QIcon(self.resource_path('icons/colored/printer-network.png')),
+        self.printPreviewImage_act = QAction(QIcon(self.resource_path('icons/48x48/Printer-View.png')),
                                              "Print Pre&view...", self)
         self.printPreviewImage_act.triggered.connect(self.printPreviewImage)
         self.printPreviewImage_act.setStatusTip("Print preview the image.")
@@ -567,16 +569,16 @@ class MusicPainter(QMainWindow):
         quit_act.triggered.connect(self.close)
         quit_act.setStatusTip("Shut down the application.")
 
-        self.copyImage_act = QAction(QIcon(self.resource_path('icons/colored/pictures.png')), "Copy &Image", self)
+        self.copyImage_act = QAction(QIcon(self.resource_path('icons/48x48/Copy.png')), "Copy &Image", self)
         self.copyImage_act.setShortcut('Ctrl+C')
         self.copyImage_act.triggered.connect(self.copyImageToClipboard)
         self.copyImage_act.setStatusTip("Copy the image to the clipboard.")
 
-        self.saveImage_act = QAction(QIcon(self.resource_path('icons/colored/picture.png')), "Save Image &As...", self)
+        self.saveImage_act = QAction(QIcon(self.resource_path('icons/48x48/Download-Blue.png')), "Save Image &As...", self)
         self.saveImage_act.triggered.connect(self.saveAsImage)
         self.saveImage_act.setStatusTip("Save the image.")
 
-        self.render_act = QAction(QIcon(self.resource_path('icons/colored/paint-brush.png')), "&Render", self)
+        self.render_act = QAction(QIcon(self.resource_path('icons/48x48/Brush-Purple.png')), "&Render", self)
         self.render_act.triggered.connect(self.renderImage)
         self.render_act.setStatusTip("Render the image.")
 
@@ -592,42 +594,42 @@ class MusicPainter(QMainWindow):
         self.dir_open_act.triggered.connect(self.openDirectory)
         self.dir_open_act.setStatusTip("Open directory containing .wav files.")
 
-        self.resetCenter_act = QAction(QIcon(self.resource_path('icons/colored/arrow-in.png')), "Reset Center", self)
+        self.resetCenter_act = QAction(QIcon(self.resource_path('icons/48x48/Center.png')), "Reset Center", self)
         self.resetCenter_act.triggered.connect(self.canvas.resetCenter)
         self.resetCenter_act.setStatusTip("Reset the center to the origin.")
 
-        self.resetZoom_act = QAction(QIcon(self.resource_path('icons/colored/magnifier-history.png')), "Reset Zoom",
+        self.resetZoom_act = QAction(QIcon(self.resource_path('icons/48x48/Zoom.png')), "Reset Zoom",
                                      self)
         self.resetZoom_act.triggered.connect(self.canvas.resetZoom)
         self.resetZoom_act.setStatusTip("Reset the zoom factor to 1.")
 
-        self.resetCenterZoom_act = QAction(QIcon(self.resource_path('icons/colored/magnifier-zoom-fit.png')),
+        self.resetCenterZoom_act = QAction(QIcon(self.resource_path('icons/48x48/ZoomCenter.png')),
                                            "Reset Center and Zoom", self)
         self.resetCenterZoom_act.triggered.connect(self.canvas.resetCenterAndZoom)
         self.resetCenterZoom_act.setStatusTip("Reset the center to the origin and zoom factor to 1.")
 
-        self.properties_act = QAction(QIcon(self.resource_path('icons/colored/infocard.png')), "File &Information...",
+        self.properties_act = QAction(QIcon(self.resource_path('icons/48x48/InfoCard.png')), "File &Information...",
                                       self)
         self.properties_act.triggered.connect(self.SoundDataProperties)
         self.properties_act.setStatusTip("View the wav file information.")
 
-        self.play_act = QAction(QIcon(self.resource_path('icons/16/131.png')), "Render and &Play", self)
+        self.play_act = QAction(QIcon(self.resource_path('icons/48x48/Play.png')), "Render and &Play", self)
         self.play_act.triggered.connect(self.PlaySoundData)
         self.play_act.setStatusTip("Render the image while playing the wav file.")
 
-        self.stop_act = QAction(QIcon(self.resource_path('icons/16/142.png')), "&Stop Render", self)
+        self.stop_act = QAction(QIcon(self.resource_path('icons/48x48/Stop-Center.png')), "&Stop Render", self)
         self.stop_act.triggered.connect(self.StopSoundData)
         self.stop_act.setStatusTip("Stop the rendering of the image.")
 
-        self.record_act = QAction(QIcon(self.resource_path('icons/16/151.png')), "&Record", self)
+        self.record_act = QAction(QIcon(self.resource_path('icons/48x48/Record.png')), "&Record", self)
         self.record_act.triggered.connect(self.RecordSoundData)
         self.record_act.setStatusTip("Record sound and render image.")
 
-        self.saverecording_act = QAction(QIcon(self.resource_path('icons/16/193.png')), "&Save Recording", self)
+        self.saverecording_act = QAction(QIcon(self.resource_path('icons/48x48/Download.png')), "&Save Recording", self)
         self.saverecording_act.triggered.connect(self.SaveRecording)
         self.saverecording_act.setStatusTip("Save recorded sound to wav file.")
 
-        self.stoprecord_act = QAction(QIcon(self.resource_path('icons/Colored/control-pause.png')), "&Stop Recording",
+        self.stoprecord_act = QAction(QIcon(self.resource_path('icons/48x48/Pause.png')), "&Stop Recording",
                                       self)
         self.stoprecord_act.triggered.connect(self.StopRecordData)
         self.stoprecord_act.setStatusTip("Stop recording.")
@@ -636,7 +638,7 @@ class MusicPainter(QMainWindow):
         selectTheme_act.triggered.connect(self.SelectTheme)
 
         # Create help menu actions
-        self.help_about_act = QAction(QIcon(self.resource_path('icons/Colored/information-frame.png')), "&About...",
+        self.help_about_act = QAction(QIcon(self.resource_path('icons/48x48/Information.png')), "&About...",
                                       self)
         self.help_about_act.triggered.connect(self.aboutDialog)
         self.help_about_act.setStatusTip("Information about the program.")
@@ -692,6 +694,7 @@ class MusicPainter(QMainWindow):
         self.leftWidget.setStyleSheet("QDockWidget::title" "{" "background : lightblue;" "}")
         layoutWidget = QWidget()
         layout = QHBoxLayout()
+        # self.leftWidget.setVisible(True)
 
         # label1 = QLabel("Algorithm")
         # label1.setStyleSheet("background-color: lightgray;" "border-style: solid;" "border-width: 1px;"
@@ -701,19 +704,17 @@ class MusicPainter(QMainWindow):
         # label2.setStyleSheet("background-color: lightgray;" "border-style: solid;" "border-width: 1px;"
         #                      "font: ariel 14px;" "border-color: black;" "border-radius: 3px")
         # label2.setMaximumSize(100, 20)
-
-        #layout.addSpacing(100)
+        layout.addStretch()
         layout.addWidget(self.clearButton, 0, Qt.AlignRight)
         layout.addWidget(QLabel("Algorithm:"), 0, Qt.AlignRight)
         layout.addWidget(self.algorithmNum)
-        # layout.addSpacing(300)
         layout.addWidget(QLabel("Chunk Size:"), 0, Qt.AlignRight)
         layout.addWidget(self.chunkSize, 0, Qt.AlignLeft)
-        layout.addSpacing(100)
         layout.addWidget(self.DirectorySelect, 0, Qt.AlignRight)
         layout.addWidget(QLabel("File Choice:"), 0, Qt.AlignRight)
         layout.addWidget(self.ChosenFile, 0, Qt.AlignLeft)
-        layout.addWidget(self.ColorButton, 0, Qt.AlignRight)
+        layout.addWidget(self.ColorButton, 0, Qt.AlignLeft)
+        layout.addStretch()
 
         layoutWidget.setLayout(layout)
 
@@ -723,8 +724,9 @@ class MusicPainter(QMainWindow):
     # Set up toolbar
     def createToolBar(self):
         tool_bar = QToolBar("Main Toolbar")
+        tool_bar.setStyleSheet("QToolBar{spacing:6px;}")
         # tool_bar.setIconSize(QSize(20, 20))
-        tool_bar.setIconSize(tool_bar.iconSize())
+        tool_bar.setIconSize(tool_bar.iconSize() * 0.9)
         self.addToolBar(tool_bar)
 
         tool_bar.addAction(self.file_open_act)
@@ -1015,15 +1017,15 @@ class MusicPainter(QMainWindow):
 
     def AnimateRecordButton(self):
         if self.flag:
-            self.record_act.setIcon(QIcon(self.resource_path('icons/16/151.png')))
+            self.record_act.setIcon(QIcon(self.resource_path('icons/64x64/Record-Stop.png')))
         else:
-            self.record_act.setIcon(QIcon(self.resource_path('icons/16/160.png')))
+            self.record_act.setIcon(QIcon(self.resource_path('icons/64x64/Record.png')))
 
         self.flag = not self.flag
 
     def StopAnimateRecordButton(self):
         self.timer.stop()
-        self.record_act.setIcon(QIcon(self.resource_path('icons/16/151.png')))
+        self.record_act.setIcon(QIcon(self.resource_path('icons/64x64/Record.png')))
 
     # Sets up the thread to record the sound data from the microphone.
     def RecordSoundData(self):
