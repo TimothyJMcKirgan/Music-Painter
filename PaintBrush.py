@@ -28,6 +28,7 @@ class PaintBrush:
 
     def SetAlg6(self):
         self.RLData = [1, 1, 1, -1, -1, -1, -1, 1]
+        self.TriangleList = []
 
     def SetAlg2345(self):
         self.RLData = [0, 0, 0]
@@ -249,7 +250,7 @@ class PaintBrush:
         self.RLData[0] = x
         self.RLData[1] = y
 
-    def algorithm6(self, data, spect):
+        def algorithm6(self, data, spect):
 
         TriCol = QColor()
         Hue = data[0] * 10
@@ -258,40 +259,58 @@ class PaintBrush:
         LineCol = QColor()
         LineCol.setHsv(Hue, 0, 200, 255)
 
-        if (spect >= 200000):
-            WeightedFreqVal = 15.0
-        elif (spect <= 10000):
-            WeightedFreqVal = 30
+        Distance = pow(pow(self.RLData[0], 2) + pow(self.RLData[1], 2), .5)
+
+        if (Distance > 0.05):
+
+            if (spect >= 200000):
+                WeightedFreqVal = 15.0
+            elif (spect <= 10000):
+                WeightedFreqVal = 30
+            else:
+                WeightedFreqVal = ((((spect - 10000) / 190000) * 15) + 15)
+
+            Newx1 = (((WeightedFreqVal * self.RLData[0]) + self.RLData[6]) / (WeightedFreqVal + 1))
+            Newy1 = (((WeightedFreqVal * self.RLData[1]) + self.RLData[7]) / (WeightedFreqVal + 1))
+            Newx2 = (((WeightedFreqVal * self.RLData[2]) + self.RLData[0]) / (WeightedFreqVal + 1))
+            Newy2 = (((WeightedFreqVal * self.RLData[3]) + self.RLData[1]) / (WeightedFreqVal + 1))
+            Newx3 = (((WeightedFreqVal * self.RLData[4]) + self.RLData[2]) / (WeightedFreqVal + 1))
+            Newy3 = (((WeightedFreqVal * self.RLData[5]) + self.RLData[3]) / (WeightedFreqVal + 1))
+            Newx4 = (((WeightedFreqVal * self.RLData[6]) + self.RLData[4]) / (WeightedFreqVal + 1))
+            Newy4 = (((WeightedFreqVal * self.RLData[7]) + self.RLData[5]) / (WeightedFreqVal + 1))
+
+            self.rl.add(self.makeTriangle(self.RLData[0], self.RLData[1], Newx1, Newy1, Newx2, Newy2, True, TriCol))
+            self.rl.add(self.makeTriangle(self.RLData[2], self.RLData[3], Newx2, Newy2, Newx3, Newy3, True, TriCol))
+            self.rl.add(self.makeTriangle(self.RLData[4], self.RLData[5], Newx3, Newy3, Newx4, Newy4, True, TriCol))
+            self.rl.add(self.makeTriangle(self.RLData[6], self.RLData[7], Newx4, Newy4, Newx1, Newy1, True, TriCol))
+
+            self.rl.add(self.makeLine(self.RLData[0], self.RLData[1], self.RLData[2], self.RLData[3], LineCol))
+            self.rl.add(self.makeLine(self.RLData[2], self.RLData[3], self.RLData[4], self.RLData[5], LineCol))
+            self.rl.add(self.makeLine(self.RLData[4], self.RLData[5], self.RLData[6], self.RLData[7], LineCol))
+            self.rl.add(self.makeLine(self.RLData[6], self.RLData[7], self.RLData[0], self.RLData[1], LineCol))
+
+            self.TriangleList.append([[self.RLData[0],self.RLData[1]], [Newx1,Newy1], [Newx2,Newy2]])
+            self.TriangleList.append([[self.RLData[2], self.RLData[3]], [Newx2, Newy2], [Newx3, Newy3]])
+            self.TriangleList.append([[self.RLData[4], self.RLData[5]], [Newx3, Newy3], [Newx4, Newy4]])
+            self.TriangleList.append([[self.RLData[6], self.RLData[7]], [Newx4, Newy4], [Newx1, Newy1]])
+
+            self.RLData[0] = Newx1
+            self.RLData[2] = Newx2
+            self.RLData[4] = Newx3
+            self.RLData[6] = Newx4
+            self.RLData[1] = Newy1
+            self.RLData[3] = Newy2
+            self.RLData[5] = Newy3
+            self.RLData[7] = Newy4
         else:
-            WeightedFreqVal = ((((spect - 10000) / 190000) * 15) + 15)
-
-        Newx1 = (((WeightedFreqVal * self.RLData[0]) + self.RLData[6]) / (WeightedFreqVal + 1))
-        Newy1 = (((WeightedFreqVal * self.RLData[1]) + self.RLData[7]) / (WeightedFreqVal + 1))
-        Newx2 = (((WeightedFreqVal * self.RLData[2]) + self.RLData[0]) / (WeightedFreqVal + 1))
-        Newy2 = (((WeightedFreqVal * self.RLData[3]) + self.RLData[1]) / (WeightedFreqVal + 1))
-        Newx3 = (((WeightedFreqVal * self.RLData[4]) + self.RLData[2]) / (WeightedFreqVal + 1))
-        Newy3 = (((WeightedFreqVal * self.RLData[5]) + self.RLData[3]) / (WeightedFreqVal + 1))
-        Newx4 = (((WeightedFreqVal * self.RLData[6]) + self.RLData[4]) / (WeightedFreqVal + 1))
-        Newy4 = (((WeightedFreqVal * self.RLData[7]) + self.RLData[5]) / (WeightedFreqVal + 1))
-
-        self.rl.add(self.makeTriangle(self.RLData[0], self.RLData[1], Newx1, Newy1, Newx2, Newy2, True, TriCol))
-        self.rl.add(self.makeTriangle(self.RLData[2], self.RLData[3], Newx2, Newy2, Newx3, Newy3, True, TriCol))
-        self.rl.add(self.makeTriangle(self.RLData[4], self.RLData[5], Newx3, Newy3, Newx4, Newy4, True, TriCol))
-        self.rl.add(self.makeTriangle(self.RLData[6], self.RLData[7], Newx4, Newy4, Newx1, Newy1, True, TriCol))
-
-        self.rl.add(self.makeLine(self.RLData[0], self.RLData[1], self.RLData[2], self.RLData[3], LineCol))
-        self.rl.add(self.makeLine(self.RLData[2], self.RLData[3], self.RLData[4], self.RLData[5], LineCol))
-        self.rl.add(self.makeLine(self.RLData[4], self.RLData[5], self.RLData[6], self.RLData[7], LineCol))
-        self.rl.add(self.makeLine(self.RLData[6], self.RLData[7], self.RLData[0], self.RLData[1], LineCol))
-
-        self.RLData[0] = Newx1
-        self.RLData[2] = Newx2
-        self.RLData[4] = Newx3
-        self.RLData[6] = Newx4
-        self.RLData[1] = Newy1
-        self.RLData[3] = Newy2
-        self.RLData[5] = Newy3
-        self.RLData[7] = Newy4
+            self.RLData[8] += 1
+            if (self.RLData[8] * 4 >= len(self.TriangleList)):
+                self.RLData[8] = 1
+            for i in range(((self.RLData[8] - 1) * 4), (self.RLData[8] * 4)):
+                Triangle = self.TriangleList[i]
+                self.rl.add(self.makeTriangle(Triangle[0][0], Triangle[0][1], Triangle[1][0], Triangle[1][1], Triangle[2][0], Triangle[2][1], True, TriCol))
+                self.rl.add(self.makeLine(Triangle[0][0], Triangle[0][1], Triangle[1][0], Triangle[1][1], LineCol))
+                self.rl.add(self.makeLine(Triangle[0][0], Triangle[0][1], Triangle[2][0], Triangle[2][1], LineCol))
 
     def algorithm7(self, data, spect):
         if (self.RLData[3]):
