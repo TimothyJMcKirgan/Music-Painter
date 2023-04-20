@@ -86,6 +86,8 @@ class ObjectListViewer(QWidget):
         self.mousePosition = [0, 0]
         self.mouseDown = False
         self.setMouseTracking(True)
+        self.backgroundcolor = QColor()
+        self.backgroundcolor.setRgbF(1, 1, 1, 1)
 
     def SetBackCol(self):
         self.backgroundcolor = QColorDialog.getColor()
@@ -332,9 +334,7 @@ class ObjectListViewer(QWidget):
         renderstart = 0
         if self.renderAll:
             # Clear Screen
-            backgroundcolor = QColor()
-            backgroundcolor.setRgbF(1, 1, 1, 1)
-            qp.fillRect(0, 0, self.width(), self.height(), backgroundcolor)
+            qp.fillRect(0, 0, self.width(), self.height(), self.backgroundcolor)
         else:
             renderstart = self.lastRendetListSize
 
