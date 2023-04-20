@@ -86,6 +86,10 @@ class ObjectListViewer(QWidget):
         self.mousePosition = [0, 0]
         self.mouseDown = False
         self.setMouseTracking(True)
+    
+    def SetBackCol(self):
+        self.backgroundcolor = QColorDialog.getColor()
+        self.update()  
 
     def resetCenter(self):
         """
@@ -413,6 +417,7 @@ class MusicPainter(QMainWindow):
         self.rl = RenderList()
         self.paintbrush = PaintBrush(self)
         self.loadedFilename = ""
+        self.loadedFiles = []
         self.titleoverridetext = ""
         self.music_thread = None
         self.playsoundstop = False
@@ -438,6 +443,12 @@ class MusicPainter(QMainWindow):
         elif self.loadedFilename != "":
             title = title + " - " + self.loadedFilename
         self.setWindowTitle(title)
+        
+    def SetFile(self):
+        if (len(self.loadedFiles) >= 1):
+            self.loadedFilename = self.loadedFiles[self.ChosenFile.currentIndex()]
+        else:
+            self.loadedFilename = ""
 
     # Initialize the window, calls create methods to set up the GUI.
     def initializeUI(self):
@@ -448,14 +459,30 @@ class MusicPainter(QMainWindow):
 
         self.clearButton = QPushButton()
         self.clearButton.setStyleSheet('Background-color: #d1e7f0')
-        self.clearButton.setText('Clear Image')
+        self.clearButton.setText('Background Color')
         self.clearButton.setFixedSize(100, 28)
         self.clearButton.clicked.connect(self.clearImage)
+        
+        self.ColorButton = QPushButton()
+        self.ColorButton.setStyleSheet('Background-color: #d1e7f0')
+        self.ColorButton.setText('Clear Image')
+        self.ColorButton.setFixedSize(100, 28)
+        self.ColorButton.clicked.connect(self.canvas.SetBackCol)
+        
+        self.DirectorySelect = QPushButton()
+        self.DirectorySelect.setStyleSheet('Background-color: #d1e7f0')
+        self.DirectorySelect.setText('Open Directory')
+        self.DirectorySelect.setFixedSize(100, 28)
+        self.DirectorySelect.clicked.connect(self.openDirectory)
 
         self.algorithmNum = QComboBox()
         self.algorithmNum.setFixedSize(135,28)
         # for i in range(self.paintbrush.numberAlgorithms):
         #     self.algorithmNum.addItem(str(i + 1))
+        
+        self.ChosenFile = QComboBox()
+        for i in range(len(self.loadedFiles)):
+            self.ChosenFile.addItem(self.loadedFiles[i])
 
         self.algorithmNum.addItem(str('Frequency Dots'))
         self.algorithmNum.addItem(str('Dynamite'))
@@ -469,6 +496,8 @@ class MusicPainter(QMainWindow):
         self.algorithmNum.addItem(str('Spiraling Circles'))
 
         self.algorithmNum.currentIndexChanged.connect(self.resetRLData)
+        
+        self.ChosenFile.currentIndexChanged.connect(self.SetFile)
 
         self.ChunkSizesList = [1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072]
         self.chunkSize = QComboBox()
@@ -503,6 +532,19 @@ class MusicPainter(QMainWindow):
             self.paintbrush.SetAlg9()
         elif (self.algorithmNum.currentIndex() == 9):
             self.paintbrush.SetAlg10()
+        
+        if ((self.algorithmNum.currentIndex() == 5) or (self.algorithmNum.currentIndex() == 8)):
+            self.ChunkSizesList = [16384, 32768, 65536, 131072]
+            self.chunkSize.clear()
+            for val in self.ChunkSizesList:
+                self.chunkSize.addItem(str(val))
+            self.chunkSize.setCurrentIndex(0)
+        else:
+            self.ChunkSizesList = [1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072]
+            self.chunkSize.clear()
+            for val in self.ChunkSizesList:
+                self.chunkSize.addItem(str(val))
+            self.chunkSize.setCurrentIndex(4)
 
     # Setup all menu and toolbar actions as well as create the menu.
     def createMenu(self):
@@ -540,6 +582,14 @@ class MusicPainter(QMainWindow):
         self.clear_act = QAction("&Clear Image", self)
         self.clear_act.triggered.connect(self.clearImage)
         self.clear_act.setStatusTip("Clear the image.")
+        
+        self.setColor = QAction("Background Color", self)
+        self.setColor.triggered.connect(self.canvas.SetBackCol)
+        self.setColor.setStatusTip("Choose background color for image.")
+
+        self.dir_open_act = QAction("Open Directory", self)
+        self.dir_open_act.triggered.connect(self.openDirectory)
+        self.dir_open_act.setStatusTip("Open directory containing .wav files.")
 
         self.resetCenter_act = QAction(QIcon(self.resource_path('icons/colored/arrow-in.png')), "Reset Center", self)
         self.resetCenter_act.triggered.connect(self.canvas.resetCenter)
@@ -654,6 +704,10 @@ class MusicPainter(QMainWindow):
         layout.addWidget(QLabel("Chunk Size:"), 0, Qt.AlignRight)
         layout.addWidget(self.chunkSize, 0, Qt.AlignLeft)
         layout.addSpacing(100)
+        layout.addWidget(self.DirectorySelect, 0, Qt.AlignRight)
+        layout.addWidget(QLabel("File Choice:"), 0, Qt.AlignRight)
+        layout.addWidget(self.ChosenFile, 0, Qt.AlignLeft)
+        layout.addWidget(self.ColorButton, 0, Qt.AlignRight)
 
         layoutWidget.setLayout(layout)
 
@@ -1066,6 +1120,22 @@ class MusicPainter(QMainWindow):
         pixmap = QPixmap(self.canvas.size())
         self.canvas.render(pixmap)
         self.clipboard.setPixmap(pixmap)
+        
+    # https://www.geeksforgeeks.org/how-to-iterate-over-files-in-directory-using-python/
+    # Author: chetankhanna767
+    # Last Updated: 04/19/2023
+    def openDirectory(self):
+        self.loadedFiles = []
+        _OutputFolder = QFileDialog.getExistingDirectory(self, "Select Output Folder", QDir.currentPath())
+        for filename in os.listdir(_OutputFolder):
+            f = os.path.join(_OutputFolder, filename)
+            TestString = f + "."
+            TestString = TestString[-5:-1]
+            if (os.path.isfile(f) and TestString == ".wav"):
+                self.loadedFiles.append(f)
+        self.ChosenFile.clear()
+        for i in range(len(self.loadedFiles)):
+            self.ChosenFile.addItem(self.loadedFiles[i])
 
     # Saves the current image to an image file.  Defaults to a png file but the file type
     # is determined by the extension on the filename the user selects.
