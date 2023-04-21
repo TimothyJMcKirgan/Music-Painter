@@ -1017,15 +1017,15 @@ class MusicPainter(QMainWindow):
 
     def AnimateRecordButton(self):
         if self.flag:
-            self.record_act.setIcon(QIcon(self.resource_path('icons/64x64/Record-Stop.png')))
+            self.record_act.setIcon(QIcon(self.resource_path('icons/48x48/Record-Stop.png')))
         else:
-            self.record_act.setIcon(QIcon(self.resource_path('icons/64x64/Record.png')))
+            self.record_act.setIcon(QIcon(self.resource_path('icons/48x48/Record.png')))
 
         self.flag = not self.flag
 
     def StopAnimateRecordButton(self):
         self.timer.stop()
-        self.record_act.setIcon(QIcon(self.resource_path('icons/64x64/Record.png')))
+        self.record_act.setIcon(QIcon(self.resource_path('icons/48x48/Record.png')))
 
     # Sets up the thread to record the sound data from the microphone.
     def RecordSoundData(self):
