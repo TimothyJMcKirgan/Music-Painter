@@ -692,6 +692,8 @@ class MusicPainter(QMainWindow):
 
         self.leftWidget = QDockWidget()
         self.leftWidget.setStyleSheet("QDockWidget::title" "{" "background : lightblue;" "}")
+        self.leftWidget.setFeatures(self.leftWidget.DockWidgetFloatable | self.leftWidget.DockWidgetMovable)
+        
         layoutWidget = QWidget()
         layout = QHBoxLayout()
         # self.leftWidget.setVisible(True)
