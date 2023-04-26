@@ -506,7 +506,7 @@ class MusicPainter(QMainWindow):
         self.clearButton.clicked.connect(self.clearImage)
 
         self.ColorButton = QPushButton()
-        self.ColorButton.setStyleSheet('Background-color: #deddd9')
+        self.ColorButton.setStyleSheet('Background-color: #ffbdbd')
         self.ColorButton.setText('Background Color')
         #self.ColorButton.setFixedSize(120, 28)
         self.ColorButton.clicked.connect(self.canvas.SetBackCol)
@@ -518,12 +518,12 @@ class MusicPainter(QMainWindow):
         self.DirectorySelect.clicked.connect(self.openDirectory)
 
         self.algorithmNum = QComboBox()
-        self.algorithmNum.setFixedSize(130, 28)
+        #self.algorithmNum.setFixedSize(130, 28)
         # for i in range(self.paintbrush.numberAlgorithms):
         #     self.algorithmNum.addItem(str(i + 1))
 
         self.ChosenFile = QComboBox()
-        self.ChosenFile.setFixedSize(90, 28)
+        #self.ChosenFile.setFixedSize(90, 28)
         for i in range(len(self.loadedFiles)):
             self.ChosenFile.addItem(self.loadedFiles[i])
 
@@ -544,7 +544,7 @@ class MusicPainter(QMainWindow):
 
         self.ChunkSizesList = [1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072]
         self.chunkSize = QComboBox()
-        self.chunkSize.setFixedSize(130, 28)
+        #self.chunkSize.setFixedSize(130, 28)
         for val in self.ChunkSizesList:
             self.chunkSize.addItem(str(val))
         self.chunkSize.setCurrentIndex(4)
