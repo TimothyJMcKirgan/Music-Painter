@@ -391,6 +391,7 @@ class MusicPainter(QMainWindow):
         super().__init__()
         self.Parent = parent
         self.mainapp = self
+        self.setAcceptDrops(True)
         # self.setStyleSheet('Background-color: grey;')
 
         # About information for the app.
@@ -429,6 +430,45 @@ class MusicPainter(QMainWindow):
         self.timer = QTimer(self, interval=1000)
         self.timer.timeout.connect(self.AnimateRecordButton)
 
+    # https://gist.github.com/peace098beat/db8ef7161508e6500ebe
+    # Author: Terraskull
+    # Last Updated: 11/27/2020
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasUrls():
+            event.accept()
+        else:
+            event.ignore()
+
+    # https://gist.github.com/peace098beat/db8ef7161508e6500ebe
+    # Author: Terraskull
+    # Last Updated: 11/27/2020
+
+    def dropEvent(self, event):
+        FileString = ""
+        PotentialFiles = []
+        files = [u.toLocalFile() for u in event.mimeData().urls()]
+        for f in files:
+            FileString += f
+        TestString = FileString + "."
+        TestString = TestString[-5:-1]
+        if (TestString == ".wav"):
+            self.loadedFilename = FileString
+            self.updateProgramWindowTitle()
+        elif (os.path.isdir(FileString)):
+            for filename in os.listdir(FileString):
+                f = os.path.join(FileString, filename)
+                TestString = f + "."
+                TestString = TestString[-5:-1]
+                if (os.path.isfile(f) and TestString == ".wav"):
+                    PotentialFiles.append(f)
+                    if (len(PotentialFiles) > 0):
+                        self.loadedFiles = PotentialFiles
+                        self.ChosenFile.clear()
+                        for i in range(len(self.loadedFiles)):
+                            self.ChosenFile.addItem(self.loadedFiles[i])
+
+
     # Adjoin a relative path for icons and help system.
     def resource_path(self, relative_path):
         if hasattr(sys, '_MEIPASS'):
@@ -462,19 +502,19 @@ class MusicPainter(QMainWindow):
         self.clearButton = QPushButton()
         self.clearButton.setStyleSheet('Background-color: #d1e7f0')
         self.clearButton.setText('Clear Image')
-        self.clearButton.setFixedSize(90, 28)
+        #self.clearButton.setFixedSize(90, 28)
         self.clearButton.clicked.connect(self.clearImage)
 
         self.ColorButton = QPushButton()
         self.ColorButton.setStyleSheet('Background-color: #deddd9')
         self.ColorButton.setText('Background Color')
-        self.ColorButton.setFixedSize(120, 28)
+        #self.ColorButton.setFixedSize(120, 28)
         self.ColorButton.clicked.connect(self.canvas.SetBackCol)
 
         self.DirectorySelect = QPushButton()
         self.DirectorySelect.setStyleSheet('Background-color: #f5f0d0')
         self.DirectorySelect.setText('Open Directory')
-        self.DirectorySelect.setFixedSize(100, 28)
+        #self.DirectorySelect.setFixedSize(100, 28)
         self.DirectorySelect.clicked.connect(self.openDirectory)
 
         self.algorithmNum = QComboBox()
@@ -574,7 +614,8 @@ class MusicPainter(QMainWindow):
         self.copyImage_act.triggered.connect(self.copyImageToClipboard)
         self.copyImage_act.setStatusTip("Copy the image to the clipboard.")
 
-        self.saveImage_act = QAction(QIcon(self.resource_path('icons/48x48/Download-Blue.png')), "Save Image &As...", self)
+        self.saveImage_act = QAction(QIcon(self.resource_path('icons/48x48/Download-Blue.png')), "Save Image &As...",
+                                     self)
         self.saveImage_act.triggered.connect(self.saveAsImage)
         self.saveImage_act.setStatusTip("Save the image.")
 
@@ -693,7 +734,7 @@ class MusicPainter(QMainWindow):
         self.leftWidget = QDockWidget()
         self.leftWidget.setStyleSheet("QDockWidget::title" "{" "background : lightblue;" "}")
         self.leftWidget.setFeatures(self.leftWidget.DockWidgetFloatable | self.leftWidget.DockWidgetMovable)
-        
+
         layoutWidget = QWidget()
         layout = QHBoxLayout()
         # self.leftWidget.setVisible(True)
@@ -1133,7 +1174,7 @@ class MusicPainter(QMainWindow):
 
     # https://www.geeksforgeeks.org/how-to-iterate-over-files-in-directory-using-python/
     # Author: chetankhanna767
-    # Last Updated: 04/19/2023
+    # Last Updated: 05/17/2021
     def openDirectory(self):
         self.loadedFiles = []
         _OutputFolder = QFileDialog.getExistingDirectory(self, "Select Output Folder", QDir.currentPath())
