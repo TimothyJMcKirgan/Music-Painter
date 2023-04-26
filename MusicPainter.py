@@ -506,7 +506,7 @@ class MusicPainter(QMainWindow):
         self.clearButton.clicked.connect(self.clearImage)
 
         self.ColorButton = QPushButton()
-        self.ColorButton.setStyleSheet('Background-color: #ffbdbd')
+        self.ColorButton.setStyleSheet('Background-color: #fac8c9')
         self.ColorButton.setText('Background Color')
         #self.ColorButton.setFixedSize(120, 28)
         self.ColorButton.clicked.connect(self.canvas.SetBackCol)
