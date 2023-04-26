@@ -599,14 +599,14 @@ class PaintBrush:
 
     # https://bryceboe.com/2006/10/23/line-segment-intersection-algorithm/
     # Author: Bryce Boe
-    # Last Updated: 03/27/2023
+    # Last Updated: 10/23/2006
 
     def ccw(self, Point1, Point2, Point3):
         return (Point3[1] - Point1[1]) * (Point2[0] - Point1[0]) > (Point2[1] - Point1[1]) * (Point3[0] - Point1[0])
 
     # https://bryceboe.com/2006/10/23/line-segment-intersection-algorithm/
     # Author: Bryce Boe
-    # Last Updated: 03/27/2023
+    # Last Updated: 10/23/2006
 
     def intersect(self, A, B, C, D):
         return self.ccw(A, C, D) != self.ccw(B, C, D) and self.ccw(A, B, C) != self.ccw(A, B, D)
