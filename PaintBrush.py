@@ -21,7 +21,7 @@ class PaintBrush:
         # 2. Add in new algorithm function.
         # 3. Add in additional elif in the draw function.
 
-        self.numberAlgorithms = 10
+        self.numberAlgorithms = 12
         self.currentAlgorithm = 1
 
     # Resets the links to the renderlist and frequency data in the main. S
@@ -148,6 +148,10 @@ class PaintBrush:
             self.algorithm9(data, spectdata)
         elif self.currentAlgorithm == 10:
             self.algorithm10(data, spectdata)
+        elif self.currentAlgorithm == 11:
+            self.algorithm11(data, datapos)
+        elif self.currentAlgorithm == 12:
+            self.algorithm12(data, datapos)
 
     # Rendering Algorithms.
 
@@ -555,6 +559,82 @@ class PaintBrush:
             col = QColor()
             col.setRgb((spectdata % 100) + 155, 50, (data[0] % 55) + 200, 255)
             self.rl.add(self.makeCircle(x, y, 0.05, True, col))
+            
+    def algorithm11(self,data,pos):
+        col = QColor()
+        avg = (data[0] + data[1]) / 2
+
+        x = pos / 1000 * np.cos(5*pos / 1000 * 2 * np.pi)
+        y = pos / 1000 * np.sin(5*pos / 1000 * 2 * np.pi)
+
+        if avg > 326:
+            col.setRgbF(1,0,0,1)
+            #self.rl.add(self.makePoint(x,y,col))
+            self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
+        elif 250 < avg <= 325:
+            col.setRgbF(avg/1000, 1, avg/2000, 1)
+            #self.rl.add(self.makePoint(x,y,col))
+            self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
+        else:
+            col.setRgbF(0, 0, 0, 1)
+            #self.rl.add(self.makePoint(x, y, col))
+            self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
+
+            
+    def algorithm12(self,data,pos):
+        col = QColor()
+        avg = (data[0] + data[1]) / 2
+
+        x = pos / 1000 * np.cos(5*pos / 1000 * 2 * np.pi)
+        y = pos / 1000 * np.sin(5*pos / 1000 * 2 * np.pi)
+
+        if avg > 326:
+            col.setRgbF(1,0,0,1)
+            #self.rl.add(self.makePoint(x,y,col))
+            self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
+        elif 250 < avg <= 325:
+            col.setRgbF(avg/1000, 1, avg/2000, 1)
+            #self.rl.add(self.makePoint(x,y,col))
+            self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
+        else:
+            col.setRgbF(0, 0, 0, 1)
+            #self.rl.add(self.makePoint(x, y, col))
+            self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
+            
+                def algorithm13(self,data,pos):
+        col = QColor()
+        avg = (data[0]+data[1])/2
+
+        #x = np.random.random() * 2 - 1
+        #y = np.random.random() * 2 - 1
+
+        #x = np.cos(pos/len(self.fl)*2*np.pi)
+        #y = np.sin(pos / len(self.fl) * 2 * np.pi)
+
+        #x = pos/len(self.fl) * np.cos(pos/len(self.fl)*2*np.pi)
+        #y = pos/len(self.fl) * np.sin(pos / len(self.fl) * 2 * np.pi)
+
+        x = np.random.random() * 2 - 1
+        y = np.random.random() * 2 - 1
+
+        if avg > 300:
+            col.setRgbF(1,0,0,1)
+            #self.rl.add(self.makePoint(x,y,col))
+            self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
+        elif 201 < avg <=299:
+            col.setRgbF(0.5, 0, 0, 1)
+            # self.rl.add(self.makePoint(x,y,col))
+            self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
+        elif 150 < avg <= 200:
+            col.setRgbF(0, 1, 0, 1)
+            #self.rl.add(self.makePoint(x,y,col))
+            self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
+        else:
+            col.setRgbF(0, 0, 0, 1)
+            #self.rl.add(self.makePoint(x, y, col))
+            self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
+            
+    
 
     def ValidTriangle(self, Triangle):
         Valid = True
