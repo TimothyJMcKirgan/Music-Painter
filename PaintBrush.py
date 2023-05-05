@@ -27,7 +27,7 @@ class PaintBrush:
     # Resets the links to the renderlist and frequency data in the main. S
 
     def SetAlg6(self):
-        self.RLData = [1, 1, 1, -1, -1, -1, -1, 1]
+        self.RLData = [1, 1, 1, -1, -1, -1, -1, 1, 0]
         self.TriangleList = []
 
     def SetAlg2345(self):
@@ -321,13 +321,15 @@ class PaintBrush:
         else:
             if (data[0] > self.RLData[4]):
                 self.RLData[4] = data[0]
-
-        RedGreen = ((data[0] / self.RLData[4]) * 510) - 255
         LineCol = QColor()
-        if (RedGreen < 0):
-            LineCol.setRgb(0, abs(RedGreen), 255)
+        if self.RLData[4] > 0:
+            RedGreen = ((data[0] / self.RLData[4]) * 510) - 255
+            if (RedGreen < 0):
+                LineCol.setRgb(0, abs(RedGreen), 255)
+            else:
+                LineCol.setRgb(RedGreen, 0, 255)
         else:
-            LineCol.setRgb(RedGreen, 0, 255)
+            LineCol.setRgb(0, 0, 255)
 
         if (self.RLData[5]):
             if (spect >= 200000):
@@ -403,10 +405,16 @@ class PaintBrush:
             else:
                 if (data[0] > self.RLData[5]):
                     self.RLData[5] = data[0]
-            Freq2 = int((data[1] / self.RLData[5]) * 1530)
+            if self.RLData[5] > 0:
+                Freq2 = int((data[1] / self.RLData[5]) * 1530)
+            else:
+                Freq2 = 0
             RedGreenBlue2 = self.getRBG(Freq2)
 
-        Freq = int((data[0] / self.RLData[4]) * 1530)
+        if self.RLData[4] > 0:
+            Freq = int((data[0] / self.RLData[4]) * 1530)
+        else:
+            Freq = 0
         RedGreenBlue = self.getRBG(Freq)
 
         if (spect >= 200000):
