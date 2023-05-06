@@ -1231,6 +1231,8 @@ class MusicPainter(QMainWindow):
     # Author: chetankhanna767
     # Last Updated: 05/17/2021
     def openDirectory(self):
+        NoFilesLoaded = True
+        mp3FileDetected = False
         self.loadedFiles = []
         _OutputFolder = QFileDialog.getExistingDirectory(self, "Select Output Folder", QDir.currentPath())
         if (_OutputFolder != ''):
@@ -1240,9 +1242,16 @@ class MusicPainter(QMainWindow):
                 TestString = TestString[-5:-1]
                 if (os.path.isfile(f) and TestString == ".wav"):
                     self.loadedFiles.append(f)
+                    NoFilesLoaded = False
+                elif (os.path.isfile(f) and TestString == ".mp3"):
+                    mp3FileDetected = True
             self.ChosenFile.clear()
             for i in range(len(self.loadedFiles)):
                 self.ChosenFile.addItem(self.loadedFiles[i])
+        if (mp3FileDetected):
+            QMessageBox.information(self, ".mp3 Files not Compatible", "Convert your file to a .wav for use with this program.", QMessageBox.Ok)
+        elif(NoFilesLoaded):
+            QMessageBox.warning(self, "No Files Loaded", "Open a Directory that contains .wav files to load them in the program.", QMessageBox.Ok)
 
     # Saves the current image to an image file.  Defaults to a png file but the file type
     # is determined by the extension on the filename the user selects.
