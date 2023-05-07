@@ -442,7 +442,7 @@ class MusicPainter(QMainWindow):
     # Last Updated: 11/27/2020
 
     def openURL(self):
-        webbrowser.open('https://musicpainterwebsite2023.on.drv.tw/www.musicpainter.com/Help.html')
+        webbrowser.open('https://musicpainterwebsite2023.on.drv.tw/musicpainter/Help.html')
 
     def dropEvent(self, event):
         mp3FileDetected = False
