@@ -1,8 +1,6 @@
 import random
-
 from PySide2.QtGui import (QColor)
 import numpy as np
-
 
 class PaintBrush:
     def __init__(self, parent=None):
@@ -588,7 +586,6 @@ class PaintBrush:
             #self.rl.add(self.makePoint(x, y, col))
             self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
 
-            
     def algorithm12(self,data,pos):
         col = QColor()
         avg = (data[0] + data[1]) / 2
@@ -642,8 +639,6 @@ class PaintBrush:
             #self.rl.add(self.makePoint(x, y, col))
             self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
             
-    
-
     def ValidTriangle(self, Triangle):
         Valid = True
         for i in self.TriangleList:
