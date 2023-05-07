@@ -443,6 +443,9 @@ class MusicPainter(QMainWindow):
     # https://gist.github.com/peace098beat/db8ef7161508e6500ebe
     # Author: Terraskull
     # Last Updated: 11/27/2020
+    
+    def openURL(self):
+        webbrowser.open('https://musicpainterwebsite2023.on.drv.tw/www.musicpainter.com/Help.html')
 
     def dropEvent(self, event):
         mp3FileDetected = False
@@ -479,8 +482,6 @@ class MusicPainter(QMainWindow):
             QMessageBox.information(self, ".mp3 Files not Compatible", "Convert your file to a .wav for use with this program.", QMessageBox.Ok)
         elif(NoFilesLoaded):
             QMessageBox.warning(self, "No Files Loaded", "Open a Directory that contains .wav files or a Wav File to load into the program.", QMessageBox.Ok)
-
-
 
     # Adjoin a relative path for icons and help system.
     def resource_path(self, relative_path):
@@ -551,6 +552,8 @@ class MusicPainter(QMainWindow):
         self.algorithmNum.addItem(str('Illuminate Snake'))
         self.algorithmNum.addItem(str('Triangle Stacker'))
         self.algorithmNum.addItem(str('Spiraling Circles'))
+        self.algorithmNum.addItem(str('Luke1'))
+        self.algorithmNum.addItem(str('Luke2'))
 
         self.algorithmNum.currentIndexChanged.connect(self.resetRLData)
 
@@ -735,6 +738,10 @@ class MusicPainter(QMainWindow):
         #self.help_about_act = QAction(QIcon(self.resource_path('Information.png')), "&About...", self)
         self.help_about_act.triggered.connect(self.aboutDialog)
         self.help_about_act.setStatusTip("Information about the program.")
+        
+        self.website_link = QAction(QIcon(self.resource_path('icons/48x48/help.png')), "&Help Webpage", self)
+        self.website_link.triggered.connect(self.openURL)
+        self.website_link.setStatusTip("Opens Help Page on Music Painter Website")
 
         # Create the menu bar
         menu_bar = self.menuBar()
@@ -770,6 +777,7 @@ class MusicPainter(QMainWindow):
 
         help_menu = menu_bar.addMenu('&Help')
         help_menu.addAction(self.help_about_act)
+        help_menu.addAction(self.website_link)
 
     def createLeftToolBar(self):
         # PainterToolBar = QToolBar("Paint Settings", self)
@@ -819,7 +827,7 @@ class MusicPainter(QMainWindow):
     # Set up toolbar
     def createToolBar(self):
         tool_bar = QToolBar("Main Toolbar")
-        tool_bar.setStyleSheet("QToolBar{spacing:6px;}")
+        tool_bar.setStyleSheet("QToolBar{spacing:7px;}")
         # tool_bar.setIconSize(QSize(20, 20))
         tool_bar.setIconSize(tool_bar.iconSize() * 0.9)
         self.addToolBar(tool_bar)
