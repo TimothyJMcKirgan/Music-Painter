@@ -1,4 +1,5 @@
 import random
+
 from PySide2.QtGui import (QColor)
 import numpy as np
 
@@ -149,7 +150,7 @@ class PaintBrush:
         elif self.currentAlgorithm == 11:
             self.algorithm11(data, datapos)
         elif self.currentAlgorithm == 12:
-            self.algorithm12(data, datapos)
+            self.algorithm12(data)
 
     # Rendering Algorithms.
 
@@ -290,7 +291,7 @@ class PaintBrush:
             self.rl.add(self.makeLine(self.RLData[4], self.RLData[5], self.RLData[6], self.RLData[7], LineCol))
             self.rl.add(self.makeLine(self.RLData[6], self.RLData[7], self.RLData[0], self.RLData[1], LineCol))
 
-            self.TriangleList.append([[self.RLData[0],self.RLData[1]], [Newx1,Newy1], [Newx2,Newy2]])
+            self.TriangleList.append([[self.RLData[0], self.RLData[1]], [Newx1, Newy1], [Newx2, Newy2]])
             self.TriangleList.append([[self.RLData[2], self.RLData[3]], [Newx2, Newy2], [Newx3, Newy3]])
             self.TriangleList.append([[self.RLData[4], self.RLData[5]], [Newx3, Newy3], [Newx4, Newy4]])
             self.TriangleList.append([[self.RLData[6], self.RLData[7]], [Newx4, Newy4], [Newx1, Newy1]])
@@ -309,7 +310,9 @@ class PaintBrush:
                 self.RLData[8] = 1
             for i in range(((self.RLData[8] - 1) * 4), (self.RLData[8] * 4)):
                 Triangle = self.TriangleList[i]
-                self.rl.add(self.makeTriangle(Triangle[0][0], Triangle[0][1], Triangle[1][0], Triangle[1][1], Triangle[2][0], Triangle[2][1], True, TriCol))
+                self.rl.add(
+                    self.makeTriangle(Triangle[0][0], Triangle[0][1], Triangle[1][0], Triangle[1][1], Triangle[2][0],
+                                      Triangle[2][1], True, TriCol))
                 self.rl.add(self.makeLine(Triangle[0][0], Triangle[0][1], Triangle[1][0], Triangle[1][1], LineCol))
                 self.rl.add(self.makeLine(Triangle[0][0], Triangle[0][1], Triangle[2][0], Triangle[2][1], LineCol))
 
@@ -504,7 +507,7 @@ class PaintBrush:
                     Line2Normal = -1 / ((Line2[1][1] - Line2[0][1]) / (Line2[1][0] - Line2[0][0]))
                     Line2MidPoint = [((Line2[0][0] + Line2[1][0]) / 2), ((Line2[0][1] + Line2[1][1]) / 2)]
                     XPos = (((-1 * Line2Normal * Line2MidPoint[0]) + Line2MidPoint[1] + (
-                                Line1Normal * Line1MidPoint[0]) - Line1MidPoint[1]) / (Line1Normal - Line2Normal))
+                            Line1Normal * Line1MidPoint[0]) - Line1MidPoint[1]) / (Line1Normal - Line2Normal))
                     YPos = Line1Normal * (XPos - Line1MidPoint[0]) + Line1MidPoint[1]
                     TriPoint = [XPos, YPos]
                     DeltaX = MidPoint[0] - TriPoint[0]
@@ -533,8 +536,8 @@ class PaintBrush:
                     self.RLData[2] = 0
 
     def algorithm10(self, data, spectdata):
-        self.RLData[0] += 0.5
-        self.RLData[1] += 0.5
+        self.RLData[0] += 0.51
+        self.RLData[1] += 0.51
         theta = self.RLData[0] % np.pi * 2
 
         if (self.RLData[1] <= np.pi):
@@ -563,82 +566,64 @@ class PaintBrush:
 
         if (self.RLData[1] != 0):
             col = QColor()
-            col.setRgb((spectdata % 100) + 155, 50, (data[0] % 55) + 200, 255)
+            col.setRgb((spectdata % 155) + 100, 75, (data[0] % 75) + 180, 255)
             self.rl.add(self.makeCircle(x, y, 0.05, True, col))
-            
-    def algorithm11(self,data,pos):
+
+    def algorithm11(self, data, pos):
         col = QColor()
         avg = (data[0] + data[1]) / 2
 
-        x = pos / 1000 * np.cos(5*pos / 1000 * 2 * np.pi)
-        y = pos / 1000 * np.sin(5*pos / 1000 * 2 * np.pi)
+        x = pos / 1000 * np.cos(5 * pos / 1000 * 2 * np.pi)
+        y = pos / 1000 * np.sin(5 * pos / 1000 * 2 * np.pi)
 
         if avg > 326:
-            col.setRgbF(1,0,0,1)
-            #self.rl.add(self.makePoint(x,y,col))
+            col.setRgbF(1, 0, 0, 1)
+            # self.rl.add(self.makePoint(x,y,col))
             self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
         elif 250 < avg <= 325:
-            col.setRgbF(avg/1000, 1, avg/2000, 1)
-            #self.rl.add(self.makePoint(x,y,col))
+            col.setRgbF(avg / 1000, 1, avg / 2000, 1)
+            # self.rl.add(self.makePoint(x,y,col))
             self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
         else:
             col.setRgbF(0, 0, 0, 1)
-            #self.rl.add(self.makePoint(x, y, col))
+            # self.rl.add(self.makePoint(x, y, col))
             self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
 
-    def algorithm12(self,data,pos):
+    def algorithm12(self, data):
+
         col = QColor()
         avg = (data[0] + data[1]) / 2
 
-        x = pos / 1000 * np.cos(5*pos / 1000 * 2 * np.pi)
-        y = pos / 1000 * np.sin(5*pos / 1000 * 2 * np.pi)
+        # x = np.random.random() * 2 - 1
+        # y = np.random.random() * 2 - 1
 
-        if avg > 326:
-            col.setRgbF(1,0,0,1)
-            #self.rl.add(self.makePoint(x,y,col))
-            self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
-        elif 250 < avg <= 325:
-            col.setRgbF(avg/1000, 1, avg/2000, 1)
-            #self.rl.add(self.makePoint(x,y,col))
-            self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
-        else:
-            col.setRgbF(0, 0, 0, 1)
-            #self.rl.add(self.makePoint(x, y, col))
-            self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
-            
-                def algorithm13(self,data,pos):
-        col = QColor()
-        avg = (data[0]+data[1])/2
+        # x = np.cos(pos/len(self.fl)*2*np.pi)
+        # y = np.sin(pos / len(self.fl) * 2 * np.pi)
 
-        #x = np.random.random() * 2 - 1
-        #y = np.random.random() * 2 - 1
-
-        #x = np.cos(pos/len(self.fl)*2*np.pi)
-        #y = np.sin(pos / len(self.fl) * 2 * np.pi)
-
-        #x = pos/len(self.fl) * np.cos(pos/len(self.fl)*2*np.pi)
-        #y = pos/len(self.fl) * np.sin(pos / len(self.fl) * 2 * np.pi)
+        # x = pos/len(self.fl) * np.cos(pos/len(self.fl)*2*np.pi)
+        # y = pos/len(self.fl) * np.sin(pos / len(self.fl) * 2 * np.pi)
 
         x = np.random.random() * 2 - 1
         y = np.random.random() * 2 - 1
 
         if avg > 300:
-            col.setRgbF(1,0,0,1)
-            #self.rl.add(self.makePoint(x,y,col))
+            col.setRgbF(1, 0, 0, 1)
+            # self.rl.add(self.makePoint(x,y,col))
             self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
-        elif 201 < avg <=299:
+        elif 201 < avg <= 299:
             col.setRgbF(0.5, 0, 0, 1)
             # self.rl.add(self.makePoint(x,y,col))
             self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
         elif 150 < avg <= 200:
             col.setRgbF(0, 1, 0, 1)
-            #self.rl.add(self.makePoint(x,y,col))
+            # self.rl.add(self.makePoint(x,y,col))
             self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
         else:
             col.setRgbF(0, 0, 0, 1)
-            #self.rl.add(self.makePoint(x, y, col))
+            # self.rl.add(self.makePoint(x, y, col))
             self.rl.add(self.makeRectangle(x - 0.05, y + 0.05, x + 0.05, y - 0.05, True, col))
-            
+
+
     def ValidTriangle(self, Triangle):
         Valid = True
         for i in self.TriangleList:
